@@ -4,6 +4,7 @@ void ComputeHS(int nid, int nfree)
 ```
 * ST[nid]부터 ST[nfree-1]까지의 문자들이 이루는 문자열의 hashcode 값을 계산하는 함수
 * [ ] hashcode를 반환할지 결정해야함
+* [ ] hashcode 계산 방법 : sum%HTsize vs (sum%HTsize)+1 질문하기
 </br>
 
 ```
