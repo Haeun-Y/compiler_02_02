@@ -1,11 +1,26 @@
 ## functions
-* **void ComputeHS(int nid, int nfree)** : ST[nid]부터 ST[nfree-1]까지의 문자들이 이루는 문자열의 hashcode 값을 계산하는 함수, hashcode를 반환할지 결정해야함
-* **void LookupHS(int nid, int hscode)** : ST[nid]부터 시작되는 문자열, 즉 현재 해시테이블에 넣고자하는 문자열과 동일한 문자열이 이미 해시테이블에 존재하는지 확인하는 함수
+```
+void ComputeHS(int nid, int nfree)
+```
+* ST[nid]부터 ST[nfree-1]까지의 문자들이 이루는 문자열의 hashcode 값을 계산하는 함수
+* [ ] hashcode를 반환할지 결정해야함
+</br>
+
+```
+void LookupHS(int nid, int hscode)
+```
+* ST[nid]부터 시작되는 문자열, 즉 현재 해시테이블에 넣고자하는 문자열과 동일한 문자열이 이미 해시테이블에 존재하는지 확인하는 함수
+* [ ] 동일한 문자열이 존재하는지 여부를 담는 변수 found를 전역변수로 처리할지, 반환값으로 처리할지 결정해야함
+* [ ] 동일한 문자열이 존재한다면, 해당 문자열의 ST에서의 시작 인덱스를 저장해야함. 전역변수로 처리할지 반환값으로 처리할지 결정해야함
+* [ ] 반환한다면, 반환값을 int로 두고 -1(동일한 문자열 존재 x), 0~ (시작인덱스) 
+* [ ] 함수내에서 nfree값이 필요한데 파라미터로 받아도 되는지 질문하기 (현재는 함수내에서 직접 계산)
 
 </br>
 
 ## ErrorType
-* enum errorTypes { noerror, illid, overst };
+```
+enum errorTypes { noerror, illid, overst };
+```
 </br>
 
 ## 역할 분담
