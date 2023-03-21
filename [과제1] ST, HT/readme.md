@@ -1,4 +1,6 @@
 ## functions
+* **void ComputeHS(int nid, int nfree)** : ST[nid]부터 ST[nfree-1]까지의 문자들이 이루는 문자열의 hashcode 값을 계산하는 함수, hashcode를 반환할지 결정해야함
+* **void LookupHS(int nid, int hscode)** : ST[nid]부터 시작되는 문자열, 즉 현재 해시테이블에 넣고자하는 문자열과 동일한 문자열이 이미 해시테이블에 존재하는지 확인하는 함수
 
 </br>
 
