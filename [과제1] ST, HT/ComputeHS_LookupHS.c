@@ -46,36 +46,29 @@ void ComputeHS(int nid, int nfree)
         sum += ch;
     }
     
-    //return sum%HTsize;
-    //hashcode 계산 방법 수정하기 
-    //전역 변수로 사용할지 ?? return 값을 변경해도 될지?? 
-    
     hscode = sum%HTsize;
     printf("hscode : %d\n", hscode);
+    //return hscode;
     
 }
 void LookupHS(int nid, int hscode)
 {
-    //main에서 사용되는 found는 전역변수로 관리할 것인지, return 값으로 돌려줄건지
-    //found는 LookupHS 의 결과 
-    //found == true 이면, 이미 해쉬테이블에 존재하는 것
     
-    //nfree를 직접 계산할지, 파라미터로 받을지 ??
-    
-    //직접 계산 
     int nfree = nid;
-    
-    //빈칸과 \0는 다른데 둘 중 어느걸로 해야할지? 
-    while(ST[nfree] != ' ') nfree++;
-    
-    //int targetSize = nfree - nid;
+    //nfree 직접 계산
+    printf("new word : ");
+    while(ST[nfree] != ' ')
+    {
+        printf("%c", ST[nfree]);
+        nfree++;
+    }
+    printf("\n");
     
     
     if(HT[hscode] == NULL)
     {
         found = false;
         printf("false\n");
-        //return false;
     }
     
     else
@@ -85,36 +78,49 @@ void LookupHS(int nid, int hscode)
         //list 탐색 
         for(; cur != NULL; cur = cur->next)
         {
-            int curIdx = cur -> index;
-            bool isSame = true;
-            for(int i = nid; i<nfree; i++)
+            int curStart = cur -> index;
+            int curEnd = curStart;
+            
+            printf("existed word : ");
+            while(ST[curEnd] != ' ')
             {
-                if(ST[curIdx] != ' ' && ST[curIdx] != ST[i])
+                printf("%c", ST[curEnd]);
+                curEnd++;
+            }
+            printf("\n");
+            
+            //두 문자열의 길이가 같을 때
+            if((nfree - nid) == (curEnd - curStart))
+            {
+                bool isSame = true;
+                for(int i = nid, j = curStart; i<nfree; i++, j++)
                 {
-                    isSame = false;
-                    break;
+                    if(ST[i] != ST[j])
+                    {
+                        isSame = false;
+                        break;
+                    }
+                    
                 }
-                
-                if(ST[curIdx] == ' ')
+                if(isSame)
                 {
-                    isSame = false;
-                    break;
+                    found = true;
+                    
+                    //같은 값이 존재한다면 ST에서의 인덱스를 알려줘야함 
+                    sameIdx = curStart;
+                    return;
                 }
-                
-                curIdx++;
                 
             }
-            if(ST[curIdx] != ' ') isSame = false;
             
-            if(isSame)
+            else
             {
-                found = true;
-                sameIdx = cur -> index;
-                return;
+                printf("lengh is different. %d %d\n", (nfree - nid), (curEnd - curStart));
+                continue;
             }
             
         }
-        //만약 같은 값이 존재한다면 ST에서의 인덱스를 알려줘야함 
+        
     }
     
     
@@ -123,34 +129,53 @@ void LookupHS(int nid, int hscode)
 void tmpLookup(int nid, int curIdx) 
 {
     int nfree = nid;
-    while(ST[nfree] != ' ') nfree++;
+    printf("new word : ");
+    while(ST[nfree] != ' ')
+    {
+        printf("%c", ST[nfree]);
+        nfree++;
+        
+    }
+    printf("\n");
     
-    bool isSame = true;
-    for(int i = nid; i<nfree; i++)
+    int curStart = curIdx;
+    int curEnd = curStart;
+    
+    printf("existed word : ");
+    while(ST[curEnd] != ' ')
     {
-        printf("new ch : %c\texisted ch : %c\n", ST[i], ST[curIdx]);
-        if(ST[curIdx] != ' ' && ST[curIdx] != ST[i])
-        {
-                    isSame = false;
-                    break;
-        }
-                
-        if(ST[curIdx] == ' ')
-        {
-            isSame = false;
-            break;
-        }
-                
-        curIdx++;
-                
+        printf("%c", ST[curEnd]);
+        curEnd++;
     }
-    if(ST[curIdx] != ' ') isSame = false;
+    printf("\n");
             
-    if(isSame)
+    //두 문자열의 길이가 같을 때
+    if((nfree - nid) == (curEnd - curStart))
     {
-        found = true;
-        return;
+        bool isSame = true;
+        for(int i = nid, j = curStart; i<nfree; i++, j++)
+        {
+            printf("%c %c\n", ST[i], ST[j]);
+            if(ST[i] != ST[j])
+            {
+                isSame = false;
+                break;
+            }
+                    
+        }
+        if(isSame)
+        {
+            found = true;
+                    
+            //같은 값이 존재한다면 ST에서의 인덱스를 알려줘야함 
+            sameIdx = curStart;
+            return;
+        }
+                
     }
+    else
+        printf("lengh is different. %d %d\n", (nfree - nid), (curEnd - curStart));
+    
 }
 int main(void)
 {
@@ -160,8 +185,8 @@ int main(void)
     for(int i = 0; i<strlen(tmpInput); i++)
         ST[i] = tmpInput[i];
         
-    ComputeHS(0, 2);
-    tmpLookup(0, 18);
+    //ComputeHS(0, 2);
+    tmpLookup(0, 10);
     printf("%s", (found)? "true":"false");
     
 }
