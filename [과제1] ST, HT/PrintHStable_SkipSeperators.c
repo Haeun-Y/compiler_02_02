@@ -75,13 +75,12 @@ int isSeperator(char input)
 void SkipSeperators() 
 {
     // 문자도 아니고, 숫자도 아닌 경우
-    while (!isLetter(input) || !isDigit(input)) {
-        // seperator 인 경우 skip
-        if (isSeperator(input)) {
-            input = fgetc(fp);
-            return;
+    while (input != EOF && !isLetter(input) || !isDigit(input)) {
+        // seperator 아닌 경우
+        if (!isSeperator(input)) {
+            printf("잘못된 캐릭터");
         }
-        printf("잘못된 문자입니다.");
+        input = fgetc(fp);
     }
     
 }
