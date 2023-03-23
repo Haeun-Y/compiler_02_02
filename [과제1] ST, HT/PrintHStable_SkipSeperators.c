@@ -57,7 +57,7 @@ void PrintHStable()
             while (ST[STIdx] != '\0' && STIdx < STsize) {
                 print("%c", ST[STIdx]);
             }
-            print("\n")
+            print("\n");
         }
     }
     printf("\n\n\n < %4d characters are used in the string table > \n ", nextFree);
@@ -79,9 +79,9 @@ void SkipSeperators()
         // seperator 인 경우 skip
         if (isSeperator(input)) {
             input = fgetc(fp);
-            return
+            return;
         }
-        printf("잘못된 문자입니다.")
+        printf("잘못된 문자입니다.");
     }
     
 }
