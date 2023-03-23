@@ -56,6 +56,7 @@ void PrintHStable()
             STIdx = pointer->index;
             while (ST[STIdx] != '\0' && STIdx < STsize) {
                 printf("%c", ST[STIdx]);
+                STIdx++;
             }
             printf("\n");
         }
