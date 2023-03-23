@@ -48,16 +48,16 @@ void PrintHStable()
         
         // HT 출력
         if (HT[HTIdx] != NULL) {
-            print("  Hash Code %3d : ", HTIdx);
+            printf("  Hash Code %3d : ", HTIdx);
         }
         
         // ST내의 스트링출력
         for (pointer = HT[HTIdx]; pointer != NULL; pointer = pointer->next) {
             STIdx = pointer->index;
             while (ST[STIdx] != '\0' && STIdx < STsize) {
-                print("%c", ST[STIdx]);
+                printf("%c", ST[STIdx]);
             }
-            print("\n");
+            printf("\n");
         }
     }
     printf("\n\n\n < %4d characters are used in the string table > \n ", nextFree);
