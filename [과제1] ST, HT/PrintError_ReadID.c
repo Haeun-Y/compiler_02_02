@@ -21,9 +21,9 @@ void PrintError( ERRORtypes err )
             break;
             
         case illid: 
-            printf("...Error...    ");
+            //printf("...Error...    "); -> main에서 처리해야 할 것 같다.
             
-            //에러를 가진 단어 출력?
+            //에러를 가진 단어 출력 역시 main에서 처리
             
             if(isDigit(input)){ // 숫자일 경우
                 printf(" start with digit \n");
@@ -54,7 +54,6 @@ void ReadID() {
             //이상한 문자일 경우 에러
             if (!(isLetter(input) || isDigit(input))){
                 err = illid; 
-                //출력은 단어가 완성된 모양으로 출력되야 하므로 일단 
             }
             
             ST[nextfree++] = input; //ST에 input 값을 넣은 후 netfree 값을 1 증가 시킴
