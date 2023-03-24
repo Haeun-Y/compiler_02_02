@@ -46,7 +46,7 @@ void ComputeHS(int nid, int nfree)
         sum += ch;
     }
     
-    hscode = sum%HTsize;
+    hscode = (sum%HTsize)+1;
     
 }
 bool isSameChar(char ch1, char ch2)
@@ -130,47 +130,4 @@ void ADDHT(int hscode)
     newId->next= HT[hscode]; //pointer to next identifier = hscode index of HT 
 
     HT[hscode]= newId; //insert newId into hscode index of hash table
-}
-void printHeading()
-{
-    printf("-------------- ------------\n");
-    printf(" Index in ST    identifier \n");
-    printf("-------------- ------------\n");
-}
-int main(void)
-{
-    //ab Abc AB ab abcd a x 123 x 
-    char tmpInput[] = "ab\0Abc\0bA\0ab\0abcd\0a\0x\0x123\0X\0";
-    
-    for(int i = 0; i<29; i++)
-        ST[i] = tmpInput[i];
-        
-    while(nextId < 29)
-    {
-        while(ST[nextFree] != '\0') nextFree++;
-        printf("******************************\n");
-        printf("nextId : %d, nextFree : %d\n", nextId, nextFree);
-        ComputeHS(nextId, nextFree);
-        LookupHS(nextId, hscode);
-        printf("found : %s\n", (found)? "true":"false");   
-        
-
-        if(!found)
-        {
-            ADDHT(hscode);
-            printf("Index in ST : %d", nextId);
-        }
-        else printf("Index in ST : %d", sameIdx);
-
-        printf("\nidentifier : ");
-        for(int i = nextId; i<nextFree; i++)
-            printf("%c", ST[i]);
-        printf("\n");
-
-        nextId = nextFree + 1;
-        nextFree = nextId;
-        printf("******************************\n\n");
-    }
-    
-    
 }
