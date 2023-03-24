@@ -35,7 +35,7 @@ void PrintError( ERRORtypes err )
 }
 void ReadID() {
 
-    nextid = nextfree; //nextfree값을 현재 nextid로 대입
+    nextId = nextFree; //nextFree값을 현재 nextId로 대입
     
     if (isDigit(input)) { //숫자로 시작하는 경우, 에러 출력
         err = illid; 
@@ -43,7 +43,7 @@ void ReadID() {
     } else {
         while (input != EOF)) {
             //STsize를 넘을 경우 overflow 에러
-            if (nextfree == STsize) {
+            if (nextFree == STsize) {
                 err = overst;
                 PrintError(err);
             }
@@ -56,7 +56,7 @@ void ReadID() {
                 err = illid; 
             }
             
-            ST[nextfree++] = input; //ST에 input 값을 넣은 후 netfree 값을 1 증가 시킴
+            ST[nextFree++] = input; //ST에 input 값을 넣은 후 netfree 값을 1 증가 시킴
             input = fgetc(fp);  //다음 문자를 읽음
             }
         }
