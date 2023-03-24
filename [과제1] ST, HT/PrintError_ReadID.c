@@ -1,12 +1,14 @@
 #define isLetter(x) ( (x>='a' && x<='z')||(x>='A'&& x<='Z'))
 #define isDigit(x) (x>='0' && x<='9')
 
-int isSeperator(char input) {
+ERRORtypes err;
+
+bool isSeperator(char input) {
     for (int i = 0; i < strlen(seperators); i++) {
-        if (input == seperators[i]) return 1; // 배열 내에 존재하므로 구분자임
+        if (input == seperators[i]) return true; // 배열 내에 존재하므로 구분자임
     }
 
-    return 0; // 구분자가 아님
+    return false; // 구분자가 아님
 }
 
 void PrintError( ERRORtypes err )
@@ -21,10 +23,12 @@ void PrintError( ERRORtypes err )
         case illid: 
             printf("...Error...    ");
             
+            //에러를 가진 단어 출력?
+            
             if(isDigit(input)){ // 숫자일 경우
                 printf(" start with digit \n");
             }else{ // 숫자가 아닐 경우
-                printf("%c", input, "Is not allowed");
+                printf("%c Is not allowed", input);
             }
             break;
     }
@@ -50,11 +54,12 @@ void ReadID() {
             //이상한 문자일 경우 에러
             if (!(isLetter(input) || isDigit(input))){
                 err = illid; 
-                PrintError(err);
+                //출력은 단어가 완성된 모양으로 출력되야 하므로 일단 
             }
             
             ST[nextfree++] = input; //ST에 input 값을 넣은 후 netfree 값을 1 증가 시킴
             input = fgetc(fp);  //다음 문자를 읽음
+            }
         }
 
     }
