@@ -64,10 +64,19 @@ void PrintHStable()
     printf("\n\n\n < %4d characters are used in the string table > \n ", nextFree);
 }
 
+int isSeperator(char input) 
+{
+    for (int i = 0; i < strlen(seperators); i++) {
+        if (input == seperators[i]) return 1; 
+    }
+
+    return 0;
+}
+
 void SkipSeperators() 
 {
     // 문자도 아니고, 숫자도 아닌 경우
-    while (input != EOF && !isLetter(input) || !isDigit(input)) {
+    while (input != EOF && isSeperator(input)) {
         input = fgetc(fp);
     }
     
