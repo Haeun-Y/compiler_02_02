@@ -67,6 +67,7 @@ void PrintHStable()
     printf("\n\n\n < %4d characters are used in the string table > \n ", nextFree);
 }
 
+
 int isSeperator(char input) 
 {
     for (int i = 0; i < strlen(seperators); i++) {
@@ -283,28 +284,22 @@ int main() {
             LookupHS(nextId,hscode);
             
             if(!found) { //if not matched
+                printf("%12d 	", nextId); //index in ST
+                for(i=nextId; i<nextFree-1; i++)
+                    printf("%c", ST[i]);
+                printf("     (entered)\n");
                 ADDHT(hscode); //add a new element to the list, pointing to new identifier
-                printf(" 	%d", nextId); //index in ST
-                i = nextId;
-                while (i < nextFree-1) {
-                    printf("%s", &ST[i]);
-                    i++;
                 }
-                printf("(entered)\n");
             }
             else { //if matched
-                printf(" 	%d", sameIdx); 
-                i = nextId;
-                while (i < nextFree-1) {
-                    printf("%s", &ST[i]);
-                    i++;
-                }
+                printf("%6d 	", sameIdx); 
+                for(i=nextId; i<nextFree-1; i++)
+                    printf("%c", ST[i]);
                 printf("(already existed)\n");
 
                 //not delete the identifier from ST but process by index (ST에서 삭제하지 않고, 인덱스로 처리)
                 nextFree = nextId;
             }
         }
+        PrintHStable();
     }
-    PrintHStable();
-}
