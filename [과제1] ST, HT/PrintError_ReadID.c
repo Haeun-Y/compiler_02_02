@@ -55,7 +55,7 @@ void ReadID() {
 
     if (isDigit(input)) { //숫자로 시작하는 경우 에러
         err = illid;
-        PrintError(input);
+        PrintError(err);
     }
     else {
         while (input != EOF && !isSeperator(input)) {
