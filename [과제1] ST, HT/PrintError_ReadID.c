@@ -1,4 +1,4 @@
-#define isLetter(x) ( (x>='a' && x<='z')||(x>='A'&& x<='Z'))
+#define isLetter(x) ( (x>='a' && x<='z')||(x>='A'&& x<='Z')||(x=='_'))
 #define isDigit(x) (x>='0' && x<='9')
 
 ERRORtypes err;
