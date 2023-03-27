@@ -6,7 +6,7 @@
 #define FILE_NAME "testdata.txt"
 #define STsize 1000 //size of string table
 #define HTsize 100 //size of hash table
-#define isLetter(x) ( (x>='a' && x<='z')||(x>='A'&& x<='Z'))
+#define isLetter(x) ( (x>='a' && x<='z')||(x>='A'&& x<='Z')||(x=='_'))
 #define isDigit(x) (x>='0' && x<='9')
 
 // more define variables…
