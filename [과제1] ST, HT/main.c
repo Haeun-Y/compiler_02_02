@@ -10,10 +10,10 @@
 #define isDigit(x) (x>='0' && x<='9')
 
 // more define variables…
-typedef struct HTentry *HTpointer;
+typedef struct HTentry* HTpointer;
 typedef struct HTentry {
-int index; //index of identifier in ST
-HTpointer next; //pointer to next identifier
+    int index; //index of identifier in ST
+    HTpointer next; //pointer to next identifier
 } HTentry;
 
 //error 타입
@@ -30,38 +30,36 @@ HTpointer HT[HTsize];
 char ST[STsize];
 // more global variables…
 ERRORtypes err;
-FILE *fp; //to be a pointer to FILE
+FILE* fp; //to be a pointer to FILE
 char input;
 
 //Initialize - open input file
 void initialize()
 {
-fp = fopen(FILE_NAME, "r");
-input = fgetc( fp );
+    fopen_s(&fp, FILE_NAME, "r");
+    input = fgetc(fp);
 }
 
-ERRORtypes err;
-
-void printHeading()
+void PrintHeading()
 {
     printf("-------------- ------------\n");
     printf(" Index in ST    identifier \n");
     printf("-------------- ------------\n");
 }
 
-void PrintHStable() 
+void PrintHStable()
 {
     int HTIdx, STIdx;
     HTpointer pointer;
 
     printf("[[  HASH TABLE  ]]\n\n");
     for (HTIdx = 0; HTIdx < HTsize; HTIdx++) {
-        
+
         // HT 출력
         if (HT[HTIdx] != NULL) {
             printf("  Hash Code %3d : ", HTIdx);
         }
-        
+
         // ST내의 스트링출력
         for (pointer = HT[HTIdx]; pointer != NULL; pointer = pointer->next) {
             STIdx = pointer->index;
@@ -84,13 +82,13 @@ bool isSeperator(char input) {
     return false; // 구분자가 아님
 }
 
-void SkipSeperators() 
+void SkipSeperators()
 {
     // 문자도 아니고, 숫자도 아닌 경우
     while (input != EOF && isSeperator(input)) {
         input = fgetc(fp);
     }
-    
+
 }
 
 void PrintError(ERRORtypes err)
@@ -137,7 +135,7 @@ void ReadID() {
 
     if (isDigit(input)) { //숫자로 시작하는 경우 에러
         err = illid;
-        PrintError(input);
+        PrintError(err);
     }
     else {
         while (input != EOF && !isSeperator(input)) {
@@ -162,28 +160,28 @@ void ReadID() {
 void ComputeHS(int nid, int nfree)
 {
     int sum = 0;
-    for(int i = nid; i<nfree; i++)
+    for (int i = nid; i < nfree; i++)
     {
         char ch = ST[i];
-        if(ch >= 'A' && ch <= 'Z') //대문자일 경우
+        if (ch >= 'A' && ch <= 'Z') //대문자일 경우
             ch -= ('A' - 'a');
         sum += ch;
     }
-    
-    hscode = (sum%HTsize)+1;
-    
+
+    hscode = (sum % HTsize) + 1;
+
 }
 bool isSameChar(char ch1, char ch2)
 {
     //ch1이 대문자일 경우
-    if(ch1 >= 'A' && ch1 <= 'Z')
+    if (ch1 >= 'A' && ch1 <= 'Z')
         ch1 -= ('A' - 'a');
-    
+
     //ch2가 대문자일 경우
-    if(ch2 >= 'A' && ch2 <= 'Z')
+    if (ch2 >= 'A' && ch2 <= 'Z')
         ch2 -= ('A' - 'a');
-    
-    if(ch1 == ch2)
+
+    if (ch1 == ch2)
         return true;
 
     else return false;
@@ -193,67 +191,67 @@ void LookupHS(int nid, int hscode)
 {
     //global variable found
     found = false;
-    
-    if(HT[hscode] == NULL)
+
+    if (HT[hscode] == NULL)
         return;
-    
-    
+
+
     else
     {
         HTpointer cur = HT[hscode];
-        
+
         //list 탐색 
-        for(; cur != NULL; cur = cur->next)
+        for (; cur != NULL; cur = cur->next)
         {
-            int curStart = cur -> index;
+            int curStart = cur->index;
             int curEnd = curStart;
-            
+
             //기존 문자열의 끝 탐색
-            while(ST[curEnd] != '\0') curEnd++;
-            
+            while (ST[curEnd] != '\0') curEnd++;
+
             //두 문자열의 길이가 같을 때
-            if((nextFree - nid) == (curEnd - curStart))
+            if ((nextFree - nid) == (curEnd - curStart))
             {
                 bool isSame = true;
-                for(int i = nid, j = curStart; i<nextFree; i++, j++)
+                for (int i = nid, j = curStart; i < nextFree; i++, j++)
                 {
-                    if(!isSameChar(ST[i], ST[j]))
+                    if (!isSameChar(ST[i], ST[j]))
                     {
                         isSame = false;
                         break;
                     }
-                    
+
                 }
-                if(isSame)
+                if (isSame)
                 {
-                    found = true; 
+                    found = true;
                     sameIdx = curStart;
                     return;
                 }
-                
+
             }
-            
+
             //두 문자열의 길이가 같지 않을 때
             else continue;
-            
-            
+
+
         }
-        
+
     }
-    
-    
-    
+
+
+
 }
 void ADDHT(int hscode)
 {
     HTpointer newId; //declaration for new identifier pointer
-    newId= (HTpointer)malloc(sizeof(newId)); //allocate memory equal to the size of the new identifier pointer
+    newId = (HTpointer)malloc(sizeof(newId)); //allocate memory equal to the size of the new identifier pointer
 
     //pointing to new identifier
-    newId->index= nextId; //index of identifier in ST = first index of word
-    newId->next= HT[hscode]; //pointer to next identifier = hscode index of HT 
+    newId->index = nextId; //index of identifier in ST = first index of word
+    newId->next = HT[hscode]; //pointer to next identifier = hscode index of HT 
 
-    HT[hscode]= newId; //insert newId into hscode index of hash table
+    HT[hscode] = newId; //insert newId into hscode index of hash table
 }
 
 
@@ -262,34 +260,34 @@ int main()
     int i;
     PrintHeading();
     initialize();
-    
+
     while (input != EOF) {
         err = noerror;
         SkipSeperators();
         ReadID();
-        if( input != EOF && err != illid ) {
-            if( nextFree == STsize ) {
+        if (input != EOF && err != illid) {
+            if (nextFree == STsize) {
                 // print error message
             }
             ST[nextFree++] = '\0';
 
             ComputeHS(nextId, nextFree);
-            LookupHS(nextId,hscode);
-            
-            if(!found) { //if not matched
+            LookupHS(nextId, hscode);
+
+            if (!found) { //if not matched
                 ADDHT(hscode); //add a new element to the list, pointing to new identifier
                 printf(" 	%d", nextId); //index in ST
                 i = nextId;
-                while (i < nextFree-1) {
+                while (i < nextFree - 1) {
                     printf("%s", ST[i]);
                     i++;
                 }
                 printf("(entered)\n");
             }
             else { //if matched
-                printf(" 	%d", sameIdx); 
+                printf(" 	%d", sameIdx);
                 i = nextId;
-                while (i < nextFree-1) {
+                while (i < nextFree - 1) {
                     printf("%s", ST[i]);
                     i++;
                 }
@@ -300,6 +298,6 @@ int main()
             }
         }
     }
-            PrintHStable();
+    PrintHStable();
 }
 
