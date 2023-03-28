@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define FILE_NAME "testdata1.txt"
+#define FILE_NAME "testdata.txt"
 #define STsize 1000 //size of string table
 #define HTsize 100 //size of hash table
 
@@ -11,18 +11,18 @@
 #define isLetter(x) ( (x>='a' && x<='z')||(x>='A'&& x<='Z')||(x=='_'))
 #define isDigit(x) (x>='0' && x<='9')
 
-typedef struct HTentry *HTpointer;
-typedef struct HTentry 
+typedef struct HTentry* HTpointer;
+typedef struct HTentry
 {
     int index;
     HTpointer next;
 } HTentry;
 
-enum errorTypes 
-{ 
-    noerror, 
-    illid, 
-    overst 
+enum errorTypes
+{
+    noerror,
+    illid,
+    overst
 };
 
 typedef enum errorTypes ERRORtypes;
@@ -38,22 +38,22 @@ int sameIdx;
 int nextId;
 int nextFree;
 char input;
-FILE *fp;
+FILE* fp;
 ERRORtypes err;
 
-void PrintHStable() 
+void PrintHStable()
 {
     int HTIdx, STIdx;
     HTpointer pointer;
 
     printf("\n\n[[  HASH TABLE  ]]\n\n");
     for (HTIdx = 0; HTIdx < HTsize; HTIdx++) {
-        
+
         // HT 출력
         if (HT[HTIdx] != NULL) {
             printf("\n  Hash Code %3d : ", HTIdx);
         }
-        
+
         // ST내의 스트링출력
         for (pointer = HT[HTIdx]; pointer != NULL; pointer = pointer->next) {
             STIdx = pointer->index;
@@ -68,16 +68,15 @@ void PrintHStable()
 }
 
 
-int isSeperator(char input) 
+int isSeperator(char input)
 {
     for (int i = 0; i < strlen(seperators); i++) {
-        if (input == seperators[i]) return 1; 
+        if (input == seperators[i]) return 1;
     }
-
     return 0;
 }
 
-void SkipSeperators() 
+void SkipSeperators()
 {
     // 문자도 아니고, 숫자도 아닌 경우
     while (input != EOF && isSeperator(input)) {
@@ -95,6 +94,7 @@ void printHeading()
 void initialize()
 {
     fp = fopen(FILE_NAME, "r");
+    //fopen_s(&fp, FILE_NAME, "r");
     input = fgetc(fp);
 }
 
@@ -102,99 +102,88 @@ void initialize()
 void ADDHT(int hscode)
 {
     HTpointer newId; //declaration for new identifier pointer
-    newId= (HTpointer)malloc(sizeof(newId)); //allocate memory equal to the size of the new identifier pointer
+    newId = (HTpointer)malloc(sizeof(newId)); //allocate memory equal to the size of the new identifier pointer
 
     //pointing to new identifier
-    newId->index= nextId; //index of identifier in ST = first index of word
-    newId->next= HT[hscode]; //pointer to next identifier = hscode index of HT 
+    newId->index = nextId; //index of identifier in ST = first index of word
+    newId->next = HT[hscode]; //pointer to next identifier = hscode index of HT 
 
-    HT[hscode]= newId; //insert newId into hscode index of hash table
+    HT[hscode] = newId; //insert newId into hscode index of hash table
 }
 
 void ComputeHS(int nid, int nfree)
 {
     int sum = 0;
-    for(int i = nid; i<nfree; i++)
+    for (int i = nid; i < nfree; i++)
     {
         char ch = ST[i];
-        if(ch >= 'A' && ch <= 'Z') //대문자일 경우
+        if (ch >= 'A' && ch <= 'Z') //대문자일 경우
             ch -= ('A' - 'a');
         sum += ch;
     }
-    
-    hscode = (sum%HTsize)+1;
-    
+
+    hscode = (sum % HTsize) + 1;
 }
 bool isSameChar(char ch1, char ch2)
 {
     //ch1이 대문자일 경우
-    if(ch1 >= 'A' && ch1 <= 'Z')
+    if (ch1 >= 'A' && ch1 <= 'Z')
         ch1 -= ('A' - 'a');
-    
+
     //ch2가 대문자일 경우
-    if(ch2 >= 'A' && ch2 <= 'Z')
+    if (ch2 >= 'A' && ch2 <= 'Z')
         ch2 -= ('A' - 'a');
-    
-    if(ch1 == ch2)
+
+    if (ch1 == ch2)
         return true;
 
     else return false;
-
 }
 void LookupHS(int nid, int hscode)
 {
     //global variable found
     found = false;
-    
-    if(HT[hscode] == NULL)
+
+    if (HT[hscode] == NULL)
         return;
-    
-    
+
     else
     {
         HTpointer cur = HT[hscode];
-        
+
         //list 탐색 
-        for(; cur != NULL; cur = cur->next)
+        for (; cur != NULL; cur = cur->next)
         {
-            int curStart = cur -> index;
+            int curStart = cur->index;
             int curEnd = curStart;
-            
+
             //기존 문자열의 끝 탐색
-            while(ST[curEnd] != '\0') curEnd++;
-            
+            while (ST[curEnd] != '\0') curEnd++;
+
             //두 문자열의 길이가 같을 때
-            if((nextFree - nid) == (curEnd - curStart))
+            if ((nextFree - nid) == (curEnd - curStart))
             {
                 bool isSame = true;
-                for(int i = nid, j = curStart; i<nextFree; i++, j++)
+                for (int i = nid, j = curStart; i < nextFree; i++, j++)
                 {
-                    if(!isSameChar(ST[i], ST[j]))
+                    if (!isSameChar(ST[i], ST[j]))
                     {
                         isSame = false;
                         break;
                     }
-                    
                 }
-                if(isSame)
+                if (isSame)
                 {
-                    found = true; 
+                    found = true;
                     sameIdx = curStart;
                     return;
                 }
-                
             }
-            
+
             //두 문자열의 길이가 같지 않을 때
             else continue;
-            
-            
         }
-        
     }
-    
-    
-    
 }
 
 void PrintError(ERRORtypes err)
@@ -207,7 +196,7 @@ void PrintError(ERRORtypes err)
         break;
 
     case illid:
-        printf("...Error... 	");
+        printf("%12s    ", "...Error...");
 
         //start with digit
         if (isDigit(input)) {
@@ -215,10 +204,11 @@ void PrintError(ERRORtypes err)
                 printf("%c", input);
                 input = fgetc(fp);
             }
-            printf(" 	start with digit \n");
+            printf("%30s\n", "start with digit");
         }
         //not allowed letter
         else {
+
             char illc = input; //에러 문자를 출력해야 하므로 변수에 저장해놓음
 
             for (int i = nextId; i < nextFree; i++) { //ex)aa&bb인 경우, aa 출력
@@ -228,7 +218,7 @@ void PrintError(ERRORtypes err)
                 printf("%c", input);
                 input = fgetc(fp);
             }
-            printf(" 	%c Is not allowed \n", illc);
+            printf("%20c Is not allowed\n", illc);
 
             nextFree = nextId; //nextFree값 되돌리기
         }
@@ -269,37 +259,40 @@ int main() {
     int i;
     printHeading();
     initialize();
-    
+
     while (input != EOF) {
         err = noerror;
         SkipSeperators();
         ReadID();
-        if( input != EOF && err != illid ) {
-            if( nextFree == STsize ) {
-                // print error message
-            }
-            ST[nextFree++] = '\0';
-
-            ComputeHS(nextId, nextFree);
-            LookupHS(nextId,hscode);
-            
-            if(!found) { //if not matched
-                printf("%12d 	", nextId); //index in ST
-                for(i=nextId; i<nextFree-1; i++)
-                    printf("%c", ST[i]);
-                printf("     (entered)\n");
-                ADDHT(hscode); //add a new element to the list, pointing to new identifier
+        if (err != illid) {
+            if (input != EOF) { //파일의 끝이면 null을 넣어줄 필요가 없다.
+                if (nextFree+1 == STsize) { //null을 넣을 때 overflow가 나는지 검사
+                    PrintError(overst);
                 }
+                ST[nextFree] = '\0';
             }
+            
+            ComputeHS(nextId, nextFree);
+            LookupHS(nextId, hscode);
+
+            nextFree++;
+
+            if (!found) { //if not matched
+                printf("%12d    ", nextId); //index in ST
+                printf("%-15s", &ST[nextId]);
+                printf("%20s\n", "(entered)");
+                ADDHT(hscode); //add a new element to the list, pointing to new identifier
+            }
+
             else { //if matched
-                printf("%6d 	", sameIdx); 
-                for(i=nextId; i<nextFree-1; i++)
-                    printf("%c", ST[i]);
-                printf("(already existed)\n");
+                printf("%12d    ", sameIdx);
+                printf("%-15s", &ST[nextId]);
+                printf("%20s\n", "(already existed)");
 
                 //not delete the identifier from ST but process by index (ST에서 삭제하지 않고, 인덱스로 처리)
                 nextFree = nextId;
             }
         }
-        PrintHStable();
     }
+    PrintHStable();
+}
