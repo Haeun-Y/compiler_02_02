@@ -269,12 +269,10 @@ int main() {
         SkipSeperators();
         ReadID();
         if (err != illid) {
-            if (input != EOF) { //파일의 끝이면 null을 넣어줄 필요가 없다.
-                if (nextFree+1 == STsize) { //null을 넣을 때 overflow가 나는지 검사
-                    PrintError(overst);
-                }
-                ST[nextFree] = '\0';
+            if (nextFree+1 == STsize) { //null을 넣을 때 overflow가 나는지 검사
+                PrintError(overst);
             }
+            ST[nextFree] = '\0';
             
             ComputeHS(nextId, nextFree);
             LookupHS(nextId, hscode);
