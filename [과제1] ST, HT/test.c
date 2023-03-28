@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define FILE_NAME "testdata4.txt"
+#define FILE_NAME "testdata1.txt"
 #define STsize 1000 //size of string table
 #define HTsize 100 //size of hash table
 
@@ -195,6 +195,7 @@ void PrintError(ERRORtypes err)
     switch (err) {
     case overst: //오버플로우 발생시 오류문구를 출력하고 지금까지의 해시테이블 출력 후 프로그램 종료
         printf("...Error... OVERFLOW ");
+        nextFree = nextId;
         PrintHStable();
         exit(0);
         break;
@@ -274,16 +275,19 @@ int main() {
             }
             ST[nextFree] = '\0';
             
+            
             ComputeHS(nextId, nextFree);
             LookupHS(nextId, hscode);
 
-            nextFree++;
+            
 
             if (!found) { //if not matched
                 printf("%12d    ", nextId); //index in ST
                 printf("%-15s", &ST[nextId]);
                 printf("%20s\n", "(entered)");
                 ADDHT(hscode); //add a new element to the list, pointing to new identifier
+
+                nextFree++;
             }
 
             else { //if matched
