@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define FILE_NAME "testdata.txt"
+#define FILE_NAME "testdata4.txt"
 #define STsize 1000 //size of string table
 #define HTsize 100 //size of hash table
 
@@ -81,6 +81,10 @@ void SkipSeperators()
     // 문자도 아니고, 숫자도 아닌 경우
     while (input != EOF && isSeperator(input)) {
         input = fgetc(fp);
+    }
+    if (input == EOF){
+        PrintHStable();
+        exit(0);
     }
 }
 
@@ -264,7 +268,7 @@ int main() {
         err = noerror;
         SkipSeperators();
         ReadID();
-        if (err != illid && input != EOF) {
+        if (err != illid) {
             if (input != EOF) { //파일의 끝이면 null을 넣어줄 필요가 없다.
                 if (nextFree+1 == STsize) { //null을 넣을 때 overflow가 나는지 검사
                     PrintError(overst);
