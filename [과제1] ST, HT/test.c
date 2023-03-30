@@ -3,6 +3,9 @@
 //1. 실행 환경(vscode, visual studio)에 따라 initialize 함수의 fopen 코드가 달라집니다.
 //2. null 문자를 포함하지 않은 identifier가 13글자를 넘어가면 too long identifier 에러가 발생합니다.
 //3. 마지막에 출력되는 string table 내 character 개수는 identifier 뒤의 null 문자를 포함하여 카운트 합니다.
+//4. hscode 연산 결과가 100이 되는 경우를 주의해야 합니다. HTpointer HT[HTsize];라고 지정되어있고, HTsize가 100으로 지정되어있고, hashcode 계산이 hscode = (sum % HTsize) + 1; 라고 정해져있습니다. 
+//hscode 연산시, 1~HTsize 까지 가능하지만, 해쉬테이블의 가능한 인덱스 범위는 0~(HTsize-1) 이기 때문에 hscode가 100인 경우 출력되지 않습니다. 
+//hscode 연산을 hscode = (sum % HTsize); 로 변경하면 문제없이 코드가 동작 가능합니다. 
 
 #include <stdio.h>
 #include <stdlib.h>
