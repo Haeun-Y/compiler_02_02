@@ -1,3 +1,9 @@
+//코드 설명
+//
+//1. 실행 환경(vscode, visual studio)에 따라 initialize 함수의 fopen 코드가 달라집니다.
+//2. null 문자를 포함하지 않은 identifier가 13글자를 넘어가면 too long identifier 에러가 발생합니다.
+//3. 마지막에 출력되는 string table 내 character 개수는 identifier 뒤의 null 문자를 포함하여 카운트 합니다.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -206,34 +212,48 @@ void PrintError(ERRORtypes err)
         break;
 
     case illid:
-        printf("%12s    ", "...Error...");
+        {
+            char illc = input; //에러 문자
+            int cnt = 0; //글자수 카운터
 
-        //start with digit
-        if (isDigit(input)) {
-            //에러가 있는 identifier을 ST에 넣지 않고 여기서 출력
-            while (input != EOF && !isSeperator(input)) {
-                printf("%c", input);
-                input = fgetc(fp);
-            }
-            printf("%30s\n", "start with digit");
-        }
-        //not allowed letter
-        else {
-            char illc = input; //에러 문자를 출력해야 하므로 변수에 저장해놓음
+            printf("%12s    ", "...Error...");
 
             //에러가 있는 identifier을 ST에 넣지 않고 여기서 출력
             for (int i = nextId; i < nextFree; i++) { //ex)aa&bb인 경우, aa 출력
                 printf("%c", ST[i]);
+                cnt++;
             }
             while (input != EOF && !isSeperator(input)) { //ex)aa&bb인 경우, &bb 출력
                 printf("%c", input);
                 input = fgetc(fp);
+                cnt++;
             }
-            printf("%20c Is not allowed\n", illc);
+
+            //more than 12 letters
+            if (nextFree - nextId >= 12) {
+                for (int i = 0; i < 45 - cnt - 19; i++) { //공백을 출력하여 출력문의 열을 맞춤
+                    printf(" ");
+                }
+                printf("too long identifier\n");
+            }
+            //start with digit
+            else if (isDigit(illc)) {
+                for (int i = 0; i < 45 - cnt - 16; i++) { //공백을 출력하여 출력문의 열을 맞춤
+                    printf(" ");
+                }
+                printf("start with digit\n");
+            }
+            //not allowed letter
+            else {
+                for (int i = 0; i < 45 - cnt - 16; i++) { //공백을 출력하여 출력문의 열을 맞춤
+                    printf(" ");
+                }
+                printf("%c Is not allowed\n", illc);
+            }
 
             nextFree = nextId; //ST에서 삭제하지 않고, 인덱스로 처리
+            break;
         }
-        break;
     }
 }
 void ReadID() {
@@ -252,6 +272,12 @@ void ReadID() {
             }
             //허용되지 않은 문자일 경우 에러
             if (!(isLetter(input) || isDigit(input))) {
+                err = illid;
+                PrintError(err);
+                break;
+            }
+            //12자 넘을 경우 에러
+            if (nextFree - nextId >= 12) {
                 err = illid;
                 PrintError(err);
                 break;
@@ -285,7 +311,7 @@ int main() {
             if (!found) { //if not matched
                 printf("%12d    ", nextId); //index in ST
                 printf("%-15s", &ST[nextId]); //identifier
-                printf("%20s\n", "(entered)");
+                printf("%30s\n", "(entered)");
                 ADDHT(hscode); //add a new element to the list, pointing to new identifier
 
                 nextFree++;
@@ -293,7 +319,7 @@ int main() {
             else { //if matched
                 printf("%12d    ", sameIdx);
                 printf("%-15s", &ST[nextId]);
-                printf("%20s\n", "(already existed)");
+                printf("%30s\n", "(already existed)");
 
                 nextFree = nextId; // ST에서 삭제하지 않고, 인덱스로 처리
             }
