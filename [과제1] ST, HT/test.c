@@ -200,6 +200,7 @@ void PrintError(ERRORtypes err)
     switch (err) {
     case overst: //오버 플로우 발생 시 해시테이블 출력 후 프로그램 종료
         printf("...Error... OVERFLOW ");
+        nextFree = nextId;
         PrintHStable();
         exit(0);
         break;
