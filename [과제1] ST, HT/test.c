@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define FILE_NAME "testdata1.txt"
+#define FILE_NAME "testdata.txt"
 #define STsize 1000 //size of string table
 #define HTsize 100 //size of hash table
 
@@ -49,12 +49,12 @@ void PrintHStable()
     printf("\n\n[[  HASH TABLE  ]]\n\n");
     for (HTIdx = 0; HTIdx < HTsize; HTIdx++) {
 
-        // HT 출력
+        //HT 출력
         if (HT[HTIdx] != NULL) {
             printf("\n  Hash Code %3d : ", HTIdx);
         }
 
-        // ST내의 스트링출력
+        //ST내의 스트링출력
         for (pointer = HT[HTIdx]; pointer != NULL; pointer = pointer->next) {
             STIdx = pointer->index;
             while (ST[STIdx] != '\0' && STIdx < STsize) {
@@ -68,21 +68,20 @@ void PrintHStable()
 }
 
 
-int isSeperator(char input)
+bool isSeperator(char input)
 {
     for (int i = 0; i < strlen(seperators); i++) {
-        if (input == seperators[i]) return 1;
+        if (input == seperators[i]) return true;
     }
-    return 0;
+    return false;
 }
 
 void SkipSeperators()
 {
-    // 문자도 아니고, 숫자도 아닌 경우
     while (input != EOF && isSeperator(input)) {
         input = fgetc(fp);
     }
-    if (input == EOF){
+    if (input == EOF) { //파일이 끝났을 경우 HStable 출력 후 프로그램 종료
         PrintHStable();
         exit(0);
     }
@@ -97,12 +96,18 @@ void printHeading()
 
 void initialize()
 {
-    fp = fopen(FILE_NAME, "r");
-    //fopen_s(&fp, FILE_NAME, "r");
-    input = fgetc(fp);
+    fp = fopen(FILE_NAME, "r"); //vs code에서 실행할 경우
+    //fopen_s(&fp, FILE_NAME, "r"); //visual studio에서 실행할 경우
+
+    if (fp != 0) {
+        input = fgetc(fp);
+    }
+    else { //파일 경로가 잘못된 경우 프로그램 종료
+        printf("파일 경로가 잘못되지 않았는지 확인해 주세요.\n");
+        exit(0);
+    }
 }
 
-//Add a new identifier to the hash table
 void ADDHT(int hscode)
 {
     HTpointer newId; //declaration for new identifier pointer
@@ -193,9 +198,8 @@ void LookupHS(int nid, int hscode)
 void PrintError(ERRORtypes err)
 {
     switch (err) {
-    case overst: //오버플로우 발생시 오류문구를 출력하고 지금까지의 해시테이블 출력 후 프로그램 종료
+    case overst: //오버 플로우 발생 시 해시테이블 출력 후 프로그램 종료
         printf("...Error... OVERFLOW ");
-        nextFree = nextId;
         PrintHStable();
         exit(0);
         break;
@@ -205,6 +209,7 @@ void PrintError(ERRORtypes err)
 
         //start with digit
         if (isDigit(input)) {
+            //에러가 있는 identifier을 ST에 넣지 않고 여기서 출력
             while (input != EOF && !isSeperator(input)) {
                 printf("%c", input);
                 input = fgetc(fp);
@@ -213,9 +218,9 @@ void PrintError(ERRORtypes err)
         }
         //not allowed letter
         else {
-
             char illc = input; //에러 문자를 출력해야 하므로 변수에 저장해놓음
 
+            //에러가 있는 identifier을 ST에 넣지 않고 여기서 출력
             for (int i = nextId; i < nextFree; i++) { //ex)aa&bb인 경우, aa 출력
                 printf("%c", ST[i]);
             }
@@ -225,18 +230,15 @@ void PrintError(ERRORtypes err)
             }
             printf("%20c Is not allowed\n", illc);
 
-            nextFree = nextId; //nextFree값 되돌리기
+            nextFree = nextId; //ST에서 삭제하지 않고, 인덱스로 처리
         }
-        break;
-    case noerror:
         break;
     }
 }
 void ReadID() {
+    nextId = nextFree; //nextFree 값을 현재 nextId로 대입
 
-    nextId = nextFree; //nextFree값을 현재 nextId로 대입
-
-    if (isDigit(input)) { //숫자로 시작하는 경우 에러
+    if (isDigit(input)) { //start with digit 에러
         err = illid;
         PrintError(err);
     }
@@ -247,7 +249,7 @@ void ReadID() {
                 err = overst;
                 PrintError(err);
             }
-            //이상한 문자일 경우 에러
+            //허용되지 않은 문자일 경우 에러
             if (!(isLetter(input) || isDigit(input))) {
                 err = illid;
                 PrintError(err);
@@ -261,42 +263,38 @@ void ReadID() {
 }
 
 int main() {
-    int i;
-    printHeading();
     initialize();
+    printHeading();
 
     while (input != EOF) {
         err = noerror;
+
         SkipSeperators();
         ReadID();
+
         if (err != illid) {
-            if (nextFree+1 == STsize) { //null을 넣을 때 overflow가 나는지 검사
+            if (nextFree == STsize) { //null을 넣을 때 overflow가 나는지 검사
                 PrintError(overst);
             }
             ST[nextFree] = '\0';
-            
-            
+
             ComputeHS(nextId, nextFree);
             LookupHS(nextId, hscode);
 
-            
-
             if (!found) { //if not matched
                 printf("%12d    ", nextId); //index in ST
-                printf("%-15s", &ST[nextId]);
+                printf("%-15s", &ST[nextId]); //identifier
                 printf("%20s\n", "(entered)");
                 ADDHT(hscode); //add a new element to the list, pointing to new identifier
 
                 nextFree++;
             }
-
             else { //if matched
                 printf("%12d    ", sameIdx);
                 printf("%-15s", &ST[nextId]);
                 printf("%20s\n", "(already existed)");
 
-                //not delete the identifier from ST but process by index (ST에서 삭제하지 않고, 인덱스로 처리)
-                nextFree = nextId;
+                nextFree = nextId; // ST에서 삭제하지 않고, 인덱스로 처리
             }
         }
     }
