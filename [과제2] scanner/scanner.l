@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-enum tnumber { TEOF, TCONST, TELSE, TIF, TINT, TRETURN, TVOID, TWHILE, TEQUAL, TNOTEQU,TLESSE,TGREATE, TAND, TOR, TINC, TDEC, TADDASSIGN, TSUBASSIGN, TMULASSIGN, TDIVASSIGN, TMODASSIGN, TIDENT, TNUMBER  };
+enum tokentypes { TEOF, TCONST, TELSE, TIF, TINT, TRETURN, TVOID, TWHILE, TEQUAL, TNOTEQU,TLESSE,TGREATE, TAND, TOR, TINC, TDEC, TADDASSIGN, TSUBASSIGN, TMULASSIGN, TDIVASSIGN, TMODASSIGN, TIDENT, TNUMBER  };
 %}
 
 letter	[a-zA-Z_]
@@ -38,7 +38,7 @@ digit	[0-9]
 
 void main()
 {
-	enum tnumber tn;  // token number
+	enum tokentypes tn;  // token number
 	printf("  Start of Lex\n");
 	while  ((tn = yylex()) != TEOF) {
 		switch (tn) {
