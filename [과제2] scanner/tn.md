@@ -1,0 +1,47 @@
+TEOF
+
+TERROR
+TCOMMENT
+TNUMBER
+TIDENT
+
+예약어
+TCONST
+TELSE
+TIF
+TINT
+TRETURN
+TVOID
+TWHILE
+
+연산자
+TADD : +
+TSUB : -
+TMUL : *
+TDIV : /
+TMOD : %  
+
+배정 연산자
+TASSIGN : =
+TADDASSIGN : +=
+TSUBASSIGN : -=
+TMULASSIGN : *=
+TDIVASSIGN : /=
+TMODASSIGN : %=
+
+논리 연산자
+TNOT : !
+TAND : &&
+TOR : ||
+
+관계 연산자
+TEQUAL : ==
+TNOTEQU : !=
+TLESS : <
+TLESSE : <=
+TGREAT : >
+TGREATE : >=
+
+증감연산자
+TINC : ++
+TDEC : --
