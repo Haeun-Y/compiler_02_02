@@ -49,3 +49,7 @@ extern int found;  //for the previous occurrence of an identifie
 extern int lineNumber;
 extern ERRORtypes err;
 
+//reportError.c 전역변수
+extern int cErrors;
+extern char error_message[];
+
