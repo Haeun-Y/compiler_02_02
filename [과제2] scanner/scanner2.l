@@ -1,3 +1,6 @@
+
+ 
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,6 +18,14 @@ digit	[0-9]
 "return"		return(TRETURN);
 "void"		return(TVOID);
 "while"		return(TWHILE);
+"+"             return(TADD);
+"-"             return(TSUB);
+"*"             return(TMUL);
+"/"             return(TDIV);
+"%"             return(TMOD);
+"!"             return(TNOT);
+"&&"            return(TAND);
+"||"            return(TOR);
 "=="			return(TEQUAL);
 "!="			return(TNOTEQU);
 "<="			return(TLESSE);
@@ -23,6 +34,7 @@ digit	[0-9]
 "||"			return(TOR);
 "++"			return(TINC);
 "--"			return(TDEC);
+"="             return(TASSIGN);
 "+="			return(TADDASSIGN);
 "-="			return(TSUBASSIGN);
 "*="			return(TMULASSIGN);
@@ -36,17 +48,26 @@ digit	[0-9]
 "["				return(TLBRACKET);
 "]"				return(TRBRACKET);
 ";"				return(TSEMI);
-[A-Za-z_][A-Za-z_z0-9_]*		return(TIDENT);		
+[A-Za-z_][A-Za-z_z0-9_]*		{
+                                if(yyleng > 12)
+                                {
+                                    err = illeng; PrintError(err); return(TERROR);
+                                }
+                                else
+                                {
+                                    SymbolTable();
+                                    return(TIDENT);
+                                }
+                                }	
+[0-9]+[A-Za-z0-9_]+             { error = illid; PrintError(err); return(TERROR);}
 [1-9][0-9]*|0([0-7]+|(x|X)[0-9A-Fa-f]*)?		return(TNUMBER);
 "/*"([^*]|\*+[^*/])*\**"*/"			;
 "//".*				;
 [ \t]				;
 "\n"			{ lineNumber++; }
-.				return(yytext[0]);
 %%
 
 int yywrap()
 {
-	printf("   End of Lex \n");
 	return 1;
 }
