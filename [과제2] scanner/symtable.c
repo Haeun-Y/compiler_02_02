@@ -12,17 +12,6 @@ int sameid;  //first index of identifier
 
 int found;  //for the previous occurrence of an identifie
 
-
-//printHeading	 -		Print the heading
-void PrintHeading()
-{
-	printf("\n\n");
-	printf("  -----------      ------------ \n");
-	printf("  Index in ST       identifier  \n");
-	printf("  -----------      ------------ \n");
-	printf("\n");
-}
-
 /*PrintHStable     -   	Prints the hash table.write out the hashcode and the list of identifiers
 						associated with each hashcode,but only for non-empty lists.
 						Print out the number of characters used up in ST. */
@@ -123,18 +112,18 @@ void SymmbolTable()
 	ComputeHS(nextid, nextfree);
 	LookupHS(nextid, hashcode);
 
+	//TODO : 중복이 발생하는 경우와 발생하지 않는 경우 모두 sameid로 STindex 출력할 수 있도록 변경한 것 주의 
+	//TODO : main 로직에서 출력상 필요하지 않으면 다시 변경하기 
+	
 	if (!found) {
-		printf("%6d         ", nextid);
-		for (int i = nextid; i < nextfree - 1; i++)
-			printf("%c", ST[i]);
-		printf("          (entered)\n");
 		ADDHT(hashcode);
+		sameid = nextid;
 	}
 	else {
-		printf("%6d         ", sameid);
-		for (int i = nextid; i < nextfree - 1; i++)
-			printf("%c", ST[i]);
-		printf("          (already existed)\n");
+		//printf("%6d         ", sameid);
+		//for (int i = nextid; i < nextfree - 1; i++)
+		//	printf("%c", ST[i]);
+		//printf("          (already existed)\n");
 		nextfree = nextid;
 	}
 
