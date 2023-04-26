@@ -27,8 +27,6 @@ digit	[0-9]
 "!="			return(TNOTEQU);
 "<="			return(TLESSE);
 ">="			return(TGREATE);
-"&&"			return(TAND);
-"||"			return(TOR);
 "++"			return(TINC);
 "--"			return(TDEC);
 "="             return(TASSIGN);
