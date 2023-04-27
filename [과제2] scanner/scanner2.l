@@ -27,8 +27,6 @@ digit	[0-9]
 "!="			return(TNOTEQU);
 "<="			return(TLESSE);
 ">="			return(TGREATE);
-"&&"			return(TAND);
-"||"			return(TOR);
 "++"			return(TINC);
 "--"			return(TDEC);
 "="             return(TASSIGN);
@@ -48,7 +46,7 @@ digit	[0-9]
 [A-Za-z_][A-Za-z_z0-9_]*		{
                                 if(yyleng > 12)
                                 {
-                                    err = illid_long; PrintError(err); return(TERROR);
+                                    err = illid_long; ReportError(err); return(TERROR);
                                 }
                                 else
                                 {
@@ -56,13 +54,13 @@ digit	[0-9]
                                     return(TIDENT);
                                 }
                                 }	
-[0-9]+[A-Za-z0-9_]+             { error = illid_digit; PrintError(err); return(TERROR);}
+[0-9]+[A-Za-z0-9_]+             { error = illid_digit; ReportError(err); return(TERROR);}
 [1-9][0-9]*|0([0-7]+|(x|X)[0-9A-Fa-f]*)?		return(TNUMBER);
 "/*"([^*]|\*+[^*/])*\**"*/"			;
 "//".*				;
 [ \t]				;
 "\n"			{ lineNumber++; }
-.               { error = illid_illch; PrintError(err); return(TERROR);}
+.               { error = illid_illch; ReportError(err); return(TERROR);}
 %%
 
 int yywrap()
