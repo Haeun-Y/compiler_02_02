@@ -52,7 +52,8 @@ digit	[0-9]
                                 else
                                 {
                                     SymbolTable();
-                                    return(TIDENT);
+				    if(err == OVERST) { return(TERROR);}
+				    else { return(TIDENT); }
                                 }
                                 }	
 [0-9]+[A-Za-z0-9_]+             { err = illid_digit; ReportError(err); return(TERROR);}
