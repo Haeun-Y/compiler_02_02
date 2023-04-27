@@ -22,6 +22,9 @@ void ReportError(ERRORtypes err)
 	cErrors++;
 
 	switch (err) {
+	case overst:
+		strcpy(error_message, "overflow\n");
+		break;
 	case illid_long:
 		strcpy(error_message, "too long identifier\n");
 		break;
