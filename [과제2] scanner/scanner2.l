@@ -61,7 +61,7 @@ digit	[0-9]
 "//".*				;
 [ \t]				;
 "\n"			{ lineNumber++; }
-.               { err = illid_illch; ReportError(err); return(TERROR);}
+.+               { err = illid_illch; ReportError(err); return(TERROR);}
 %%
 
 int yywrap()
