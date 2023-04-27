@@ -52,7 +52,7 @@ digit	[0-9]
                                 else
                                 {
                                     SymbolTable();
-				    if(err == OVERST) { return(TERROR);}
+				    if(err == OVERST) { ReportError(err); return(TERROR);}
 				    else { return(TIDENT); }
                                 }
                                 }	
