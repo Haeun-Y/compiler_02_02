@@ -103,6 +103,11 @@ void ADDHT(int hscode)
 //오류없는 identifier인 경우 yytext를 hashtable에 삽입하는 함수
 void SymmbolTable()
 {
+	if(STsize == nextfree)
+	{
+		err = overst;
+		return;
+	}
 	nextid = nextfree;
 	for (int i = 0; i < yyleng; i++)
 		ST[nextfree++] = yytext[i];
