@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tn.h"
+ERRORtypes err = noerror;
 %}
 
 letter	[a-zA-Z_]
