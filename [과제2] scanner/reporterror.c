@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "th.h"
 
 //아래 부분들은 tn.h로 처리 cErrors, error_print 모두 global 변수
 enum errorTypes { noerror, illid_digit, illid_long, illid_illch, overst };
@@ -21,11 +22,6 @@ void ReportError(ERRORtypes err)
 	cErrors++;
 
 	switch (err) {
-	case overst:
-		strcpy(error_message, "overflow\n");
-		printf("%d errors detected", cErrors);
-		exit(0);
-		break;
 	case illid_long:
 		strcpy(error_message, "too long identifier\n");
 		break;
