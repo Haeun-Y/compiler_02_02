@@ -11,6 +11,7 @@
 extern yylex();
 extern char* yytext;
 extern int lineNumber;
+//extern int cErrors; 
 
 void PrintHeading()
 {
@@ -32,7 +33,7 @@ void PrintToken(enum tnumber tn)
         	case TIF: printf("%-20s %s\n", "if", yytext); break;
         	case TINT: printf("%-20s %s\n", "int", yytext); break;
         	case TRETURN: printf("%-20s %s\n", "return", yytext);  break;
-       		case TVOID: printf("%-20s %s\n", "void", yytext);  break;
+        	case TVOID: printf("%-20s %s\n", "void", yytext);  break;
         	case TWHILE: printf("%-20s %s\n", "while", yytext); break;
         	case TADD: printf("%-20s %s\n", "add", yytext); break;
         	case TSUB: printf("%-20s %s\n", "subtract", yytext); break;
@@ -66,7 +67,7 @@ void PrintToken(enum tnumber tn)
         
 		//TODO: overst 처리 논의
 		case TIDENT: printf("%-20s %s %s\n", "identifier", yytext, nextid);   break;
-		case TERROR: printf("%-20s %s\n", "**Error**", yytext);   break;
+		case TERROR: printf("%-20s %s\n", "**Error**", error_message);   break;
 	}
 }
 
