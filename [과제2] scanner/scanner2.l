@@ -51,8 +51,9 @@ digit	[0-9]
                                 }
                                 else
                                 {
+				    err = noerror;
                                     SymbolTable();
-				    if(err == OVERST) { ReportError(err); return(TERROR);}
+				    if(err == overst) { ReportError(err); return(TERROR);}
 				    else { return(TIDENT); }
                                 }
                                 }	
