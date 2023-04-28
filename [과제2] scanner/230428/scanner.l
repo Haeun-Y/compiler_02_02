@@ -54,6 +54,7 @@ else		return(TELSE);
     							}
     							else
     							{
+							    err = noerror;
     							    SymbolTable();
     							    if(err == overst) return(TERROR);
     							    return(TIDENT);
