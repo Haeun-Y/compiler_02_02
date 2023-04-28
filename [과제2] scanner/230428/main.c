@@ -1,6 +1,6 @@
 /*
-* main.c - °¢ token¿¡ ´ëÇÑ Ãâ·Â
-* programmer - ±Ç¿µ°æ, ¿ÁÁøÁÖ, À±ÇÏÀº, ÃÖ¿¹¿ø
+* main.c - ê° tokenì— ëŒ€í•œ ì¶œë ¥
+* programmer - ê¶Œì˜ê²½, ì˜¥ì§„ì£¼, ìœ¤í•˜ì€, ìµœì˜ˆì›
 * date - 2023/04/27
 */
 
@@ -14,8 +14,8 @@ void PrintHeading()
 	printf("\n");
 }
 
-/* TokenÀÇ Line number, type, ¹®ÀÚ¿­À» Ãâ·ÂÇÏ´Â ÇÔ¼ö
-	identifierÀÇ °æ¿ì String Table¿¡¼­ÀÇ indexµµ Ãâ·ÂÇÔ */
+/* Tokenì˜ Line number, type, ë¬¸ìì—´ì„ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
+	identifierì˜ ê²½ìš° String Tableì—ì„œì˜ indexë„ ì¶œë ¥í•¨ */
 void printToken(enum tokentypes tn)
 {
 	printf("%5d\t\t\t", lineNumber);
@@ -57,13 +57,13 @@ void printToken(enum tokentypes tn)
 	case TSEMI: printf("%-20s %s\n", "semicolon", yytext);   break;
 	case TNUMBER: printf("%-20s %s\n", "number", yytext);   break;
 
-		//TODO: overst Ã³¸® ³íÀÇ
-	case TIDENT: printf("%-20s %s %d\n", "identifier", yytext, nextid);   break;
+		//TODO: overst ì²˜ë¦¬ ë…¼ì˜
+	case TIDENT: printf("%-20s %s %d\n", "identifier", yytext, sameid);   break;
 	case TERROR: printf("%-20s %s\n", "**Error**", error_message);   break;
 	}
 }
 
-//Token ÀÎ½ÄÇÏ¿© Token ¹× ¿¡·¯ Ãâ·Â
+//Token ì¸ì‹í•˜ì—¬ Token ë° ì—ëŸ¬ ì¶œë ¥
 void main()
 {
 	enum tokentypes tn;
@@ -71,7 +71,7 @@ void main()
 	PrintHeading();
 
 	while ((tn = yylex()) != TEOF) {
-		//Token Ãâ·Â
+		//Token ì¶œë ¥
 		printToken(tn);
 	}
 
