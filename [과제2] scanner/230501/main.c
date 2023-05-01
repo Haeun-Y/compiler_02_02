@@ -18,7 +18,8 @@ void PrintHeading()
 	identifier의 경우 String Table에서의 index도 출력함 */
 void printToken(enum tokentypes tn)
 {
-	printf("%5d\t\t\t", lineNumber);
+	if(tn == TCOMMENT) printf("%5d\t\t\t", startLineNumber);
+	else printf("%5d\t\t\t", lineNumber);
 	switch (tn) {
 	case TCONST: printf("%-20s %s\n", "const", yytext);  break;
 	case TELSE: printf("%-20s %s\n", "else", yytext);  break;
@@ -59,10 +60,17 @@ void printToken(enum tokentypes tn)
 	case TSEMI: printf("%-20s %s\n", "semicolon", yytext);   break;
 	case TNUMBER: printf("%-20s %s\n", "number", yytext);   break;
 
-		//TODO: overst 처리 논의
 	case TIDENT: printf("%-20s %s \t\t\t%d\n", "identifier", yytext, sameid);   break;
 	case TCOMMENT: printf("%-20s %s\n", "comment", yytext);   break;
-	case TERROR: printf("%-20s %s\n", "**Error**", error_message);   break;
+	case TERROR: printf("%-20s %s\n", "**Error**", error_message);
+		if (err == overst)
+		{
+			printf("Program terminated due to overflow of ST.\n");
+			exit(1);
+
+		}
+			
+				break;
 	}
 }
 
