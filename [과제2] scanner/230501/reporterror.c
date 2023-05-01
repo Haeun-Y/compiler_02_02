@@ -12,6 +12,7 @@
 */
 #include "tn.h"
 
+//case별로 error에 대한 report를 하여 실행결과에서 error message를 확인할 수 있게 하는 함수
 void ReportError(ERRORtypes err)
 {
 	cErrors++;
@@ -31,5 +32,6 @@ void ReportError(ERRORtypes err)
 		break;
 	case real_num:
 		strcpy(error_message, "real number is not allowed");
+		//실수가 들어올 경우 에러 발생. floating point의 경우는 제외하였음. 
 	}
 }
