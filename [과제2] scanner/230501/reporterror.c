@@ -32,6 +32,6 @@ void ReportError(ERRORtypes err)
 		break;
 	case real_num:
 		strcpy(error_message, "real number is not allowed");
-		//실수가 들어올 경우 에러 발생. floating point의 경우는 제외하였음. 
+		//실수가 들어올 경우 에러 발생. Floating Point 경우는 제외하였음.
 	}
 }
