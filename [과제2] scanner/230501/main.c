@@ -68,6 +68,7 @@ void printToken(enum tokentypes tn)
 		{
 			printf("Program terminated due to overflow of ST.\n");
 			exit(1);
+			//ST overflow 발생 시 프로그램이 종료됨 
 
 		}
 			
