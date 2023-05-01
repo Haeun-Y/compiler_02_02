@@ -51,7 +51,7 @@ digit	[0-9]
                                             lineNumber++;
                                     }
                                     return(TCOMMENT);
-                                }
+                                } 
 "//".*                          {
                                     startLineNumber = lineNumber; 
                                     return(TCOMMENT);
@@ -74,12 +74,12 @@ digit	[0-9]
     							    return(TIDENT);
     							}
 							}
-[1-9][0-9]*|0([0-7]+|(x|X)[0-9A-Fa-f]+)?		return(TNUMBER);
+[1-9][0-9]*|0([0-7]+|(x|X)[0-9A-Fa-f]+)?		return(TNUMBER); //정수 상수의 경우, 부호를 포함하지 않고 인식함. 연산자는 개별 토큰 인식이 되므로 부호는 고려하지 않음.
 {digit}+"."{digit}+(e[+-]?{digit}+)?  {
                                             err = real_num;
                                             ReportError(err);
                                             return(TERROR);
-                                      }
+                                      } //실수 들어올 시 에러로 간주함. Floating Point 경우는 제외하였음.
 {digit}+[A-Za-z0-9_]+             { err = illid_digit; ReportError(err); return(TERROR);}
 "\n"     lineNumber++;
 [ \t]   ;
