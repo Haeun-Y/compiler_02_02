@@ -7,7 +7,7 @@
 			overst :  overflow in ST. print the hashtable and abort
 			illid_digit    : illegal identifier (start with digit)
 			illid_long	: illegal identifier (too long identifier)
-			illid_illch	: illegal characters
+			illch	: illegal characters
 			real_num : real number 
 */
 #include "tn.h"
