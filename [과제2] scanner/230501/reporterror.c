@@ -4,7 +4,7 @@
 * date - 2023/04/27
 */
 /* error messages
-			overst :  overflow in ST. print the hashtable and abort
+			overst :  overflow in ST.
 			illid_digit    : illegal identifier (start with digit)
 			illid_long	: illegal identifier (too long identifier)
 			illch	: illegal characters
