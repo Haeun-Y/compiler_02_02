@@ -1,0 +1,28 @@
+// Test for line number, symbol table index, upper case
+/////////////
+bool noError2(){
+	CONST TEST = test;
+	INT NUM = 2;
+	WHILE(num){
+		If(num++ > 3){
+			a = 2;
+			aa=3;
+			aaa=6;
+			A=2;
+			AA=AAA;
+		}
+		eLsE print(TEST);
+	}
+
+
+
+
+
+	print(line number test);
+	line
+	number
+	t
+	e
+	s
+	t
+}
