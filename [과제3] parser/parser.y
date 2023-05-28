@@ -8,7 +8,6 @@
 
 extern yylex();
 extern yyerror();
-//extern void ReportError(ERRORtypes err);
 void semantic(int);
 %}
 
@@ -30,11 +29,11 @@ translation_unit 	: external_dcl
 external_dcl 		: function_def
 		  	| declaration
 		  	| TIDENT TSEMI
-		  	| TIDENT error					{yyerrok; id_type=0; PrintError("Missing semicolon", lineunum);}; //const int y = 10;
+		  	| TIDENT error					{yyerrok; id_type=0; PrintError("Missing semicolon", linenum);}; //const int y = 10;
 function_def 		: function_header compound_st
 			| function_header TSEMI
-			| function_header error			{yyerrok; id_type=0; PrintError("Missing semicolon", lineunum);}
-			| error compound_st			{yyerrok; PrintError("No function header”, lineunum);};
+			| function_header error				{yyerrok; id_type=0; PrintError("Missing semicolon", linenum);}
+			| error compound_st				{yyerrok; PrintError("No function header", linenum);};
 function_header 	: dcl_spec function_name formal_param	;
 dcl_spec 		: dcl_specifiers				;
 dcl_specifiers 		: dcl_specifier
@@ -62,16 +61,16 @@ opt_dcl_list 		: declaration_list
 declaration_list 	: declaration
 			| declaration_list declaration 			;
 declaration 		: dcl_spec init_dcl_list TSEMI
-			| dcl_spec init_dcl_list error 			{yyerrok; id_type=0; PrintError("Missing semicolon", lineunum);};
+			| dcl_spec init_dcl_list error 			{yyerrok; id_type=0; PrintError("Missing semicolon", linenum);};
 init_dcl_list 		: init_declarator
 			| init_dcl_list TCOMMA init_declarator
-			| init_dcl_list init_declarator			{yyerrok; id_type=0; PrintError("Missing comma", lineunum);};
+			| init_dcl_list init_declarator			{yyerrok; id_type=0; PrintError("Missing comma", linenum);};
 init_declarator 	: declarator
 		 	| declarator TIS TNUMBER
-		 	| declarator TEQUAL TNUMBER			{yyerrok; id_type=0; PrintError("Declaring error", lineunum);};
+		 	| declarator TEQUAL TNUMBER			{yyerrok; id_type=0; PrintError("Declaring error", linenum);};
 declarator 		: TIDENT					{semantic(5);}
            		| TIDENT TLBRACKET opt_number TRBRACKET		{semantic(6);}
-           		| TIDENT TLBRACKET opt_number error		{yyerrok; id_type=0; PrintError("Not closed large bracket", lineunum);}
+           		| TIDENT TLBRACKET opt_number error		{yyerrok; id_type=0; PrintError("Not closed large bracket", linenum);}
            		| TINT TIDENT                                	{id=2;}  // 스칼라 int 변수
            		| TINT TIDENT TLBRACKET opt_number TRBRACKET  	{id=3;}  // int 배열 변수
            		| TFLOAT TIDENT                              	{id=4;}  // 스칼라 float 변수
@@ -90,21 +89,21 @@ statement 		: compound_st
 	   		| return_st
 	   		;
 expression_st 		: opt_expression TSEMI
-			| expression error 				{yyerrok; id_type=0; PrintError("Missing semicolon", lineunum);};
+			| expression error 				{yyerrok; id_type=0; PrintError("Missing semicolon", linenum);};
 opt_expression 		: expression
 		 	|						;
 if_st 			: TIF TLPAREN expression TRPAREN statement %prec UIF
-			| TIF TLPAREN TRPAREN statement            %prec TIF_CONDITION_ERROR {yyerrok; PrintError("No condition", lineunum);}
-			| TIF TLPAREN expression error statement   %prec TIF_ERROR {yyerrok; PrintError("Not closed", lineunum);}
+			| TIF TLPAREN TRPAREN statement            %prec TIF_CONDITION_ERROR {yyerrok; PrintError("No condition", linenum);}
+			| TIF TLPAREN expression error statement   %prec TIF_ERROR {yyerrok; PrintError("Not closed", linenum);}
 			| TIF TLPAREN expression TRPAREN statement TELSE statement
-			| TIF TLPAREN TRPAREN statement TELSE statement  %prec TELSE_CONDITION_ERROR {yyerrok; PrintError("Not closed", lineunum);} //
-			| TIF TLPAREN expression error statement TELSE statement %prec TELSE_ERROR {yyerrok; PrintError("Not closed", lineunum);}; //
+			| TIF TLPAREN TRPAREN statement TELSE statement  %prec TELSE_CONDITION_ERROR {yyerrok; PrintError("Not closed", linenum);} //
+			| TIF TLPAREN expression error statement TELSE statement %prec TELSE_ERROR {yyerrok; PrintError("Not closed", linenum);}; //
 while_st 		: TWHILE TLPAREN expression TRPAREN statement
-			| TWHILE TLPAREN expression error statement	{yyerrok; PrintError("Not closed", lineunum);}
-			| TWHILE TLPAREN TRPAREN statement		{yyerrok; PrintError("No condition", lineunum);}
+			| TWHILE TLPAREN expression error statement	{yyerrok; PrintError("Not closed", linenum);}
+			| TWHILE TLPAREN TRPAREN statement		{yyerrok; PrintError("No condition", linenum);}
 			;
 return_st 		: TRETURN opt_expression TSEMI
-			| TRETURN opt_expression error        		{yyerrok; id_type=0; PrintError("Missing semicolon", lineunum);};
+			| TRETURN opt_expression error        		{yyerrok; id_type=0; PrintError("Missing semicolon", linenum);};
 expression 		: assignment_exp				;
 assignment_exp 		: logical_or_exp
 			| unary_exp TASSIGN assignment_exp
