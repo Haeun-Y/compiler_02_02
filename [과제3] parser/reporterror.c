@@ -23,6 +23,7 @@
 */
 yyerror(char* sb)
 {
+	cErrors++
 	printf("line %d: %s in %s \n", lineNumber, sb, yytext);
 }
 
