@@ -10,7 +10,7 @@
 		yytext	   : 에러가 발생한 문자
 
 		ex) int num = 35
-			=> line 3; no semicolon in 35
+			=> line 3; Missing semicolon in 35
 
 	ReportError(scanner에서 발생한 에러 처리)
 
