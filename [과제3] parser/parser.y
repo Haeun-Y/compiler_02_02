@@ -69,9 +69,13 @@ init_dcl_list 		: init_declarator
 init_declarator 	: declarator
 		 	| declarator TIS TNUMBER
 		 	| declarator TEQUAL TNUMBER			{yyerrork; id_type=0; PrintError("Declaring error", lineunum);};
-declarator 		: TIDENT				        {semantic(5);}
-	     		| TIDENT TLBRACKET opt_number TRBRACKET		{semantic(6);}
-	     		| TIDENT TLBRACKET opt_number error 		{yyerrork; id_type=0; PrintError("Not closed large bracket", lineunum);};
+declarator 		: TIDENT					{semantic(5);}
+           		| TIDENT TLBRACKET opt_number TRBRACKET		{semantic(6);}
+           		| TIDENT TLBRACKET opt_number error		{yyerrork; id_type=0; PrintError("Not closed large bracket", lineunum);}
+           		| TINT TIDENT                                	{id=2;}  // 스칼라 int 변수
+           		| TINT TIDENT TLBRACKET opt_number TRBRACKET  	{id=3;}  // int 배열 변수
+           		| TFLOAT TIDENT                              	{id=4;}  // 스칼라 float 변수
+           		| TFLOAT TIDENT TLBRACKET opt_number TRBRACKET 	{id=5;};  // float 배열 변수
 opt_number 		: TNUMBER
 	     		|						;
 opt_stat_list 		: statement_list
@@ -164,9 +168,10 @@ void semantic(int n)
 		case 4: id_type=4; break;	//const
 
 		case 4: id=1; break;		//function name
-		case 5: id=2; break;		//variable
-		case 6: id=3; break;		//array variable
-		case 7: id=4; break;		//function parameter
+		case 5: id=2; break;		//integer scalar variable
+		case 6: id=3; break;		//integer array variable
+		case 7: id=4; break;		//float scalar variable
+		case 8: id=5; break;		//float array variable
 	}
 }
 
