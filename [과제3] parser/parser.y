@@ -106,7 +106,7 @@ while_st 		: TWHILE TLPAREN expression TRPAREN statement
 			| TWHILE TLPAREN TRPAREN statement		{yyerrok; yyerror("No condition");}
 			;
 return_st 		: TRETURN opt_expression TSEMI			;
-			| TRETURN opt_expression error        		{yyerrok; yyerror("Missing semicolon");}
+			| TRETURN opt_expression error        		{yyerrok; yyerror("Missing semicolon");};
 expression 		: assignment_exp				;
 assignment_exp 		: logical_or_exp
 			| unary_exp TASSIGN assignment_exp
