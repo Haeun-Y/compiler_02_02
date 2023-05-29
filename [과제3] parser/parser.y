@@ -44,9 +44,9 @@ dcl_specifiers 		: dcl_specifier
 dcl_specifier 		: type_qualifier
 			| type_specifier				;
 type_qualifier 		: TCONST				 ;       
-type_specifier 		: TINT				;		
+type_specifier 		: TINT						
 			| TFLOAT					
-		 	| TVOID						
+		 	| TVOID					;	
 function_name 		: TIDENT				;
 formal_param 		: TLPAREN opt_formal_param TRPAREN
 			| TLPAREN opt_formal_param {yyerrok; yyerror("Not closed small bracket");}
