@@ -37,17 +37,17 @@ function_def 		: function_header compound_st
 			| function_header TSEMI
 			| function_header error				{yyerrok; id_type=0; yyerror("Missing semicolon");}
 			| error compound_st				{yyerrok; yyerror("No function header");};
-function_header 	: dcl_spec function_name formal_param	;
+function_header 	: dcl_spec function_name formal_param	{semantic(5)};;
 dcl_spec 		: dcl_specifiers				;
 dcl_specifiers 		: dcl_specifier
 		 	| dcl_specifiers dcl_specifier			;
 dcl_specifier 		: type_qualifier
 			| type_specifier				;
-type_qualifier 		: TCONST				        {id_type=4;}
-type_specifier 		: TINT						{id_type=1;}
-			| TFLOAT					{id_type=2;}
-		 	| TVOID						{id_type=3;};
-function_name 		: TIDENT					{id=1;};
+type_qualifier 		: TCONST				 ;       
+type_specifier 		: TINT				;		
+			| TFLOAT					
+		 	| TVOID						
+function_name 		: TIDENT				;
 formal_param 		: TLPAREN opt_formal_param TRPAREN
 			| TLPAREN opt_formal_param {yyerrok; yyerror("Not closed small bracket");}
 			;
@@ -71,13 +71,13 @@ init_dcl_list 		: init_declarator
 init_declarator 	: declarator
 		 	| declarator TIS TNUMBER
 		 	| declarator TEQUAL TNUMBER			{yyerrok; id_type=0; yyerror("Declaring error");};
-declarator 		: TIDENT					{semantic(5);}
-           		| TIDENT TLBRACKET opt_number TRBRACKET		{semantic(6);}
+declarator 		: TIDENT					
+           		| TIDENT TLBRACKET opt_number TRBRACKET		
            		| TIDENT TLBRACKET opt_number error		{yyerrok; id_type=0; yyerror("Not closed large bracket");}
-           		| TINT TIDENT                                	{id=2;}  // 스칼라 int 변수
-           		| TINT TIDENT TLBRACKET opt_number TRBRACKET  	{id=3;}  // int 배열 변수
-           		| TFLOAT TIDENT                              	{id=4;}  // 스칼라 float 변수
-           		| TFLOAT TIDENT TLBRACKET opt_number TRBRACKET 	{id=5;};  // float 배열 변수
+           		| TINT TIDENT                                	{semantic(1);}  // 스칼라 int 변수
+           		| TINT TIDENT TLBRACKET opt_number TRBRACKET  	{semantic(6);}  // int 배열 변수
+           		| TFLOAT TIDENT                              	{semantic(2);}  // 스칼라 float 변수
+           		| TFLOAT TIDENT TLBRACKET opt_number TRBRACKET 	{semantic(7);};  // float 배열 변수
 opt_number 		: TNUMBER
 	     		|						;
 opt_stat_list 		: statement_list
@@ -105,7 +105,7 @@ while_st 		: TWHILE TLPAREN expression TRPAREN statement
 			| TWHILE TLPAREN expression error statement	{yyerrok; yyerror("Not closed");}
 			| TWHILE TLPAREN TRPAREN statement		{yyerrok; yyerror("No condition");}
 			;
-return_st 		: TRETURN opt_expression TSEMI			{semantic(4);};
+return_st 		: TRETURN opt_expression TSEMI			;
 			| TRETURN opt_expression error        		{yyerrok; id_type=0; yyerror("Missing semicolon");};
 expression 		: assignment_exp				;
 assignment_exp 		: logical_or_exp
@@ -154,7 +154,7 @@ opt_actual_param 	: actual_param
 actual_param 		: actual_param_list     ;
 actual_param_list 	: assignment_exp
 		   	| actual_param_list TCOMMA assignment_exp	;
-primary_exp 		: TIDENT						{semantic(5);}
+primary_exp 		: TIDENT						
 	     		| TNUMBER
 	     		| TLPAREN expression TRPAREN
 	     		| TLPAREN expression error 			{yyerrok; yyerror("Not closed small bracket");}
@@ -164,16 +164,14 @@ void semantic(int n)
 {
 	switch(n){
 	//정의한 타입들은 symtable에서 처리
-		case 1: id_type=1; SymbolTableUpdate($$, "variable", "integer", "\0") break;	//int
-		case 2: id_type=2; SymbolTableUpdate($$, "variable", "float", "\0") break; 	//float
-		case 3: id_type=3; SymbolTableUpdate($$, "variable", "void", "\0") break;	//void
-		case 4: id_type=4; SymbolTableUpdate($$, "variable", "const", "\0") break;	//const
+		case 1: SymbolTableUpdate($$, "scalar variable", "integer", "\0") break;	//int
+		case 2: SymbolTableUpdate($$, "scalar variable", "float", "\0") break; 	//float
+		case 3: SymbolTableUpdate($$, "scalar variable", "void", "\0") break;	//void
+		case 4: SymbolTableUpdate($$, "scalar variable", "const", "\0") break;	//const
 
-		case 5: id=1; SymbolTableUpdate($$, "function", $$, "\0") break;		//function name
-		case 6: id=2; SymbolTableUpdate($$, "scalar variable", "integer", "\0") break;		//integer scalar variable
-		case 7: id=3; SymbolTableUpdate($$, "array variable", "integer", "\0") break;		//integer array variable
-		case 8: id=4; SymbolTableUpdate($$, "scalar variable", "float", "\0") break;		//float scalar variable
-		case 9: id=5; SymbolTableUpdate($$, "array variable", "float", "\0") break;		//float array variable
+		case 5: SymbolTableUpdate($2, "function", $2, $1) break;		//function name
+		case 6: SymbolTableUpdate($$, "array variable", "integer", "\0") break;		//integer array variable
+		case 7: SymbolTableUpdate($$, "array variable", "float", "\0") break;		//float array variable
 	}
 }
 
