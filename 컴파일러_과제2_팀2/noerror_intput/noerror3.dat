@@ -1,0 +1,21 @@
+/*
+
+comment test
+//hello
+this is comment
+/*
+
+*/
+
+//identifier test
+int I23456789012; // 12 characters identifier is allowed
+_underbar
+withnumber12
+
+//constant test
+1235687 , 0x12f, 0X3aF, 012, 077
+
+//what if there are many same letters?
++++++++++
++=========
+*****/////

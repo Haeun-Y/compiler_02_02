@@ -1,0 +1,17 @@
+//identifier error test
+
+int _hello__hell0___;
+char 123digit;
+float wow*^^*wow;
+
+// errors in comment ***^^^ 123digit ;;;;;;;
+
+/* real error in comment
+
+//////
+/**?
+/***/
+
+*/
+
+

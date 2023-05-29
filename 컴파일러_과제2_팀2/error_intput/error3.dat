@@ -1,0 +1,22 @@
+// This is a description of scanner.l. How many errors are there?
+
+%{
+/* scanner.l - lexical analyzer for the MiniC
+* programmer – Kimewha, Leecompu
+* date – 4/13/2023
+*/
+# include <stdio.h>
+# include "tn.h" /* token name definition */
+# include "glob.h" /* global variable */
+
+%}
+A [A-Z a-z_]
+D [0-9]
+
+%%
+{
+SymmbolTable();
+return(tnumber);
+}
+%%
+Subroutines

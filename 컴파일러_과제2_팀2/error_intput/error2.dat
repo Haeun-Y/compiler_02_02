@@ -1,0 +1,12 @@
+int main(){
+
+	int 3aa = 5;
+	float num = 5.16;
+	
+	printHashTable(num)
+
+	whilewhileIfElseConSTVOID
+
+	return 1;
+	
+}
