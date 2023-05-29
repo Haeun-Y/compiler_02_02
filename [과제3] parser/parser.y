@@ -32,10 +32,10 @@ translation_unit 	: external_dcl
 external_dcl 		: function_def
 		  	| declaration
 		  	| TIDENT TSEMI
-		  	| TIDENT error					{yyerrok; id_type=0; yyerror("Missing semicolon");}; //const int y = 10;
+		  	| TIDENT error					{yyerrok; yyerror("Missing semicolon");}; //const int y = 10;
 function_def 		: function_header compound_st
 			| function_header TSEMI
-			| function_header error				{yyerrok; id_type=0; yyerror("Missing semicolon");}
+			| function_header error				{yyerrok; yyerror("Missing semicolon");}
 			| error compound_st				{yyerrok; yyerror("No function header");};
 function_header 	: dcl_spec function_name formal_param	{semantic(5)};;
 dcl_spec 		: dcl_specifiers				;
@@ -64,16 +64,16 @@ opt_dcl_list 		: declaration_list
 declaration_list 	: declaration
 			| declaration_list declaration 			;
 declaration 		: dcl_spec init_dcl_list TSEMI
-			| dcl_spec init_dcl_list error 			{yyerrok; id_type=0; yyerror("Missing semicolon");};
+			| dcl_spec init_dcl_list error 			{yyerrok; yyerror("Missing semicolon");};
 init_dcl_list 		: init_declarator
 			| init_dcl_list TCOMMA init_declarator
-			| init_dcl_list init_declarator			{yyerrok; id_type=0; yyerror("Missing comma");};
+			| init_dcl_list init_declarator			{yyerrok; yyerror("Missing comma");};
 init_declarator 	: declarator
 		 	| declarator TIS TNUMBER
-		 	| declarator TEQUAL TNUMBER			{yyerrok; id_type=0; yyerror("Declaring error");};
+		 	| declarator TEQUAL TNUMBER			{yyerrok; yyerror("Declaring error");};
 declarator 		: TIDENT					
            		| TIDENT TLBRACKET opt_number TRBRACKET		
-           		| TIDENT TLBRACKET opt_number error		{yyerrok; id_type=0; yyerror("Not closed large bracket");}
+           		| TIDENT TLBRACKET opt_number error		{yyerrok; yyerror("Not closed large bracket");}
            		| TINT TIDENT                                	{semantic(1);}  // 스칼라 int 변수
            		| TINT TIDENT TLBRACKET opt_number TRBRACKET  	{semantic(6);}  // int 배열 변수
            		| TFLOAT TIDENT                              	{semantic(2);}  // 스칼라 float 변수
@@ -106,7 +106,7 @@ while_st 		: TWHILE TLPAREN expression TRPAREN statement
 			| TWHILE TLPAREN TRPAREN statement		{yyerrok; yyerror("No condition");}
 			;
 return_st 		: TRETURN opt_expression TSEMI			;
-			| TRETURN opt_expression error        		{yyerrok; id_type=0; yyerror("Missing semicolon");}
+			| TRETURN opt_expression error        		{yyerrok; yyerror("Missing semicolon");}
 expression 		: assignment_exp				;
 assignment_exp 		: logical_or_exp
 			| unary_exp TASSIGN assignment_exp
