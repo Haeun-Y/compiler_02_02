@@ -8,6 +8,7 @@
 
 extern yylex();
 extern yyerror();
+extern int lineNumber;
 void semantic(int);
 %}
 

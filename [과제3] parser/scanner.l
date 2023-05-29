@@ -2,6 +2,7 @@
 #include "tn.h"
 %}
 
+%option lineNumber
 letter	[a-zA-Z_]
 digit	[0-9]
 
