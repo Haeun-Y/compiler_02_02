@@ -55,7 +55,7 @@ opt_formal_param 	: formal_param_list
 		   	|						;
 formal_param_list 	: param_dcl					{semantic(7);}
 		    	| formal_param_list TCOMMA param_dcl 		{semantic(7);}
-		    	| formal_param_list param_dcl			{yyerrok; id_type=0; yyerror("Missing comma");};
+		    	| formal_param_list param_dcl			{yyerrok; yyerror("Missing comma");}
 param_dcl 		: dcl_spec declarator				;
 compound_st 		: TLBRACE opt_dcl_list opt_stat_list TRBRACE
 			| TLBRACE opt_dcl_list opt_stat_list error   {yyerrok; yyerror("Not closed medium bracket");};
