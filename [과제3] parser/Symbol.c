@@ -1,30 +1,16 @@
 /*
- * Symbol.c - Symbol table management
- */
+* Symbol.c - 심볼테이블
+* programmer - 권영경, 옥진주, 윤하은, 최예원
+* date - 2023/06/01
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "glob.h"
 
-void PrintError(ERRORtypes err);
 extern char *yytext;
 extern int yyleng;
-
-/*
-typedef struct HTentry *HTpointer;
-typedef struct HTentry {
-	int index;
-	char[100] identType;//ex) scalar variable, function
-    char[100] dataType;//ex) integer | identType == function일 경우 함수 이름
-    char[100] returnType;//identType == function 일경우 유효, 그 외에는 '\0' 저장
-  //  char[100] name;
-    int lineNumber;
-	HTpointer next;
-} HTentry;
-
-*/
-
 
 char print_ST[STsize];	//ST for printing the results
 int p_nextfree = 0;		//nextfree of print_ST
@@ -178,7 +164,6 @@ void SymbolTable()
 	err = noerror;
 	if((nextfree == STsize) || ((nextfree+yyleng) > STsize)) {
 		err = overst;
-		PrintError(err);
 	}
 
 	//READ identifier
@@ -190,7 +175,7 @@ void SymbolTable()
 	ComputeHS(nextid, nextfree);
 	LookupHS(nextid, hashcode);
 	if (!found) {
-		printf("%6d          TIDENT     %7d\t", cLine, nextid);
+		printf("%6d          TIDENT     %7d\t", lineNumber, nextid);
 		for (int i = nextid; i< nextfree-1; i++)
 			printf("%c", ST[i]);
 		printf("\t(entered)\n");
@@ -199,7 +184,7 @@ void SymbolTable()
 		nextid = nextfree;
 	}
 	else {
-		printf("%6d          TIDENT     %7d\t", cLine, sameid);
+		printf("%6d          TIDENT     %7d\t", lineNumber, sameid);
 		for (int i = nextid; i < nextfree - 1; i++)
 			printf("%c", ST[i]);
 		printf("\t(already existed)\n");
