@@ -19,10 +19,10 @@ void semantic(int);
 %token TLPAREN TRPAREN TLBRACE TRBRACE TLBRACKET TRBRACKET
 %token TCOMMA TSEMI TCOMMENT TERROR
 
-%nonassoc TIF_ERROR TIF_CONDITION_ERROR
-%nonassoc TELSE_ERROR TELSE_CONDITION_ERROR
 %nonassoc UIF
+%nonassoc TIF_ERROR TIF_CONDITION_ERROR
 %nonassoc TELSE
+%nonassoc TELSE_ERROR TELSE_CONDITION_ERROR
 
 %%
 mini_c 			: translation_unit				;
@@ -170,5 +170,4 @@ void semantic(int n)
 		case 7: SymbolTableUpdate($$, "array variable", "float", "\0") break;		//float array variable
 	}
 }
-
 
