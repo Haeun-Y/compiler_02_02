@@ -137,7 +137,26 @@ void updateHT(HTpointer cur, char* identType, char* dataType, char* returnType)
 	for(int i = 0; i<strlen(returnType); i++)
 		cur->returnType[i] = returnType[i];
 }
+void printHT()
+{
+	printf("[[HASH TABLE]]\n");
+	for(int i = 0; i<HTsize; i++)
+	{
+		if(HT[i] == NULL) continue;
+		printf("Hash Code %d : \n", i);
+		for(HTpointer cur = HT[i]; cur != NULL; cur = cur -> next)
+		{
+			//(abc: integer scalar variable, line3 )
+			if(cur->returnType == "\0")// not functionType
+				printf("%s : %s %s, line%d\n", ST[cur->index], cur->dataType, cur->identType, cur->lineNumber);
+			//(f: function name, return type = void, line2)
+			else//functionType
+				printf("%s : function name, return type = %s, line%d\n", cur->dataType, cur->returnType, cur->lineNumber);
+		}
 
+	}
+
+}
 /*
  * SymbolTable() - If read the identifier, symbol table management 
  */
@@ -175,19 +194,19 @@ void SymbolTable()
 	ComputeHS(nextid, nextfree);
 	LookupHS(nextid, hashcode);
 	if (!found) {
-		printf("%6d          TIDENT     %7d\t", lineNumber, nextid);
-		for (int i = nextid; i< nextfree-1; i++)
-			printf("%c", ST[i]);
-		printf("\t(entered)\n");
+//		printf("%6d          TIDENT     %7d\t", lineNumber, nextid);
+//		for (int i = nextid; i< nextfree-1; i++)
+//			printf("%c", ST[i]);
+//		printf("\t(entered)\n");
 		
 		ADDHT(hashcode);
 		nextid = nextfree;
 	}
 	else {
-		printf("%6d          TIDENT     %7d\t", lineNumber, sameid);
-		for (int i = nextid; i < nextfree - 1; i++)
-			printf("%c", ST[i]);
-		printf("\t(already existed)\n");
+//		printf("%6d          TIDENT     %7d\t", lineNumber, sameid);
+//		for (int i = nextid; i < nextfree - 1; i++)
+//			printf("%c", ST[i]);
+//		printf("\t(already existed)\n");
 		
 		nextfree = nextid;
 	}
