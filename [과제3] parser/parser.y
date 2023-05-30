@@ -11,7 +11,6 @@ extern yyerror();
 extern int lineNumber;
 extern char* yytext;
 void semantic(int);
-char* functionName;
 %}
 
 %token TIDENT TNUMBER TCONST TELSE TIF TEIF TINT TRETURN TVOID TWHILE
@@ -44,8 +43,7 @@ dcl_specifiers 		: dcl_specifier
 dcl_specifier 		: type_qualifier
 			| type_specifier				;
 type_qualifier 		: TCONST				 ;       
-type_specifier 		: TINT						
-			| TFLOAT					
+type_specifier 		: TINT									
 		 	| TVOID					;	
 function_name 		: TIDENT				;
 formal_param 		: TLPAREN opt_formal_param TRPAREN
@@ -76,8 +74,6 @@ declarator 		: TIDENT
            		| TIDENT TLBRACKET opt_number error		{yyerrok; yyerror("Not closed large bracket");}
            		| TINT TIDENT                                	{semantic(1);}  // 스칼라 int 변수
            		| TINT TIDENT TLBRACKET opt_number TRBRACKET  	{semantic(6);}  // int 배열 변수
-           		| TFLOAT TIDENT                              	{semantic(2);}  // 스칼라 float 변수
-           		| TFLOAT TIDENT TLBRACKET opt_number TRBRACKET 	{semantic(7);};  // float 배열 변수
 opt_number 		: TNUMBER
 	     		|						;
 opt_stat_list 		: statement_list
