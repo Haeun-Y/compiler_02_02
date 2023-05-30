@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include "tn.h"
 #include "glob.h"
 
-extern yytext;
+extern char* yytext;
+
 /*
-	yyerror(parser에서 발생한 에러 처리)
+	PrintError(parser에서 발생한 에러 처리)
 
 		lineNumber : 에러가 발생한 행
 		sb		   : 에러 명(에러 문구)
@@ -21,10 +23,13 @@ extern yytext;
 		real_num : real number
 
 */
-yyerror(char* sb)
+void yyerror(char* sb)
 {
+}
+
+void PrintError(char* sb) {
 	cErrors++;
-		printf("line %d: %s in %s \n", lineNumber, sb, yytext);
+	printf("line %d: %s in %s \n", lineNumber, sb, yytext);
 }
 
 void ReportError(ERRORtypes err)
