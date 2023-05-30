@@ -20,7 +20,7 @@ char* functionName;
 %token TLPAREN TRPAREN TLBRACE TRBRACE TLBRACKET TRBRACKET
 %token TCOMMA TSEMI TCOMMENT TERROR
 
-%nonassoc TIF_ERROR TIF_CONDITON_ERROR
+%nonassoc TIF_ERROR TIF_CONDITION_ERROR
 %nonassoc TELSE_ERROR TELSE_CONDITION_ERROR
 %nonassoc UIF
 %nonassoc TELSE
@@ -37,7 +37,7 @@ function_def 		: function_header compound_st
 			| function_header TSEMI
 			| function_header error				{yyerrok; yyerror("Missing semicolon");}
 			| error compound_st				{yyerrok; yyerror("No function header");};
-function_header 	: dcl_spec function_name formal_param	{semantic(5)};;
+function_header 	: dcl_spec function_name formal_param	{semantic(5);};
 dcl_spec 		: dcl_specifiers				;
 dcl_specifiers 		: dcl_specifier
 		 	| dcl_specifiers dcl_specifier			;
