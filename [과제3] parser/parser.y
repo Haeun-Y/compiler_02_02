@@ -20,9 +20,11 @@ void semantic(int);
 %token TCOMMA TSEMI TCOMMENT TERROR
 
 %nonassoc UIF
-%nonassoc TIF_ERROR TIF_CONDITION_ERROR
+%nonassoc TIF_CONDITION_ERROR
+%nonassoc TIF_ERROR
 %nonassoc TELSE
-%nonassoc TELSE_ERROR TELSE_CONDITION_ERROR
+%nonassoc TELSE_CONDITION_ERROR
+%nonassoc TELSE_ERROR
 
 %%
 mini_c 			: translation_unit				;
