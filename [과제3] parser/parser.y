@@ -69,7 +69,7 @@ init_dcl_list 		: init_declarator
 			| init_dcl_list TCOMMA init_declarator
 			| init_dcl_list init_declarator			{yyerrok; yyerror("Missing comma");};
 init_declarator 	: declarator
-		 	| declarator TIS TNUMBER
+		 	| declarator TASSIGN TNUMBER
 		 	| declarator TEQUAL TNUMBER			{yyerrok; yyerror("Declaring error");};
 declarator 		: TIDENT					
            		| TIDENT TLBRACKET opt_number TRBRACKET		
