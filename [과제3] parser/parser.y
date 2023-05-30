@@ -4,13 +4,15 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <malloc.h>
-//#include "glob.h"
+#include "glob.h"
 
 extern yylex();
 extern yyerror();
 extern int lineNumber;
 extern char* yytext;
 void semantic(int);
+char* name;
+char* name2;
 %}
 
 %token TIDENT TNUMBER TCONST TELSE TIF TEIF TINT TRETURN TVOID TWHILE
@@ -26,6 +28,7 @@ void semantic(int);
 %nonassoc TELSE_CONDITION_ERROR
 %nonassoc TELSE_ERROR
 
+
 %%
 mini_c 			: translation_unit				;
 translation_unit 	: external_dcl
@@ -38,7 +41,7 @@ function_def 		: function_header compound_st
 			| function_header TSEMI
 			| function_header error				{yyerrok; yyerror("Missing semicolon");}
 			| error compound_st				{yyerrok; yyerror("No function header");};
-function_header 	: dcl_spec function_name formal_param	{semantic(5);};
+function_header 	: dcl_spec function_name formal_param	{name=$2; name2=$1;};
 dcl_spec 		: dcl_specifiers				;
 dcl_specifiers 		: dcl_specifier
 		 	| dcl_specifiers dcl_specifier			;
@@ -53,8 +56,8 @@ formal_param 		: TLPAREN opt_formal_param TRPAREN
 			;
 opt_formal_param 	: formal_param_list
 		   	|						;
-formal_param_list 	: param_dcl					{semantic(7);}
-		    	| formal_param_list TCOMMA param_dcl 		{semantic(7);}
+formal_param_list 	: param_dcl					{name=$1; semantic(7);}
+		    	| formal_param_list TCOMMA param_dcl 		{name=$3; semantic(7);}
 		    	| formal_param_list param_dcl			{yyerrok; yyerror("Missing comma");}
 param_dcl 		: dcl_spec declarator				;
 compound_st 		: TLBRACE opt_dcl_list opt_stat_list TRBRACE
@@ -72,10 +75,8 @@ init_declarator 	: declarator
 		 	| declarator TASSIGN TNUMBER
 		 	| declarator TEQUAL TNUMBER			{yyerrok; yyerror("Declaring error");};
 declarator 		: TIDENT					
-           		| TIDENT TLBRACKET opt_number TRBRACKET		
-           		| TIDENT TLBRACKET opt_number error		{yyerrok; yyerror("Not closed large bracket");}
-           		| TINT TIDENT                                	{semantic(1);}  // 스칼라 int 변수
-           		| TINT TIDENT TLBRACKET opt_number TRBRACKET  	{semantic(6);}  // int 배열 변수
+           		| TIDENT TLBRACKET opt_number TRBRACKET	
+           		| TIDENT TLBRACKET opt_number error	{yyerrok; yyerror("Not closed large bracket");}
 opt_number 		: TNUMBER
 	     		|						;
 opt_stat_list 		: statement_list
@@ -90,7 +91,7 @@ statement 		: compound_st
 	   		| return_st
 	   		;
 expression_st 		: opt_expression TSEMI
-			| expression error 				{yyerrok; id_type=0; yyerror("Missing semicolon");};
+			| expression error 				{yyerrok; yyerror("Missing semicolon");};
 opt_expression 		: expression
 		 	|						;
 if_st 			: TIF TLPAREN expression TRPAREN statement %prec UIF
@@ -162,14 +163,13 @@ void semantic(int n)
 {
 	switch(n){
 	//정의한 타입들은 symtable에서 처리
-		case 1: SymbolTableUpdate($$, "scalar variable", "integer", "\0") break;	//int
-		case 2: SymbolTableUpdate($$, "scalar variable", "float", "\0") break; 	//float
-		case 3: SymbolTableUpdate($$, "scalar variable", "void", "\0") break;	//void
-		case 4: SymbolTableUpdate($$, "scalar variable", "const", "\0") break;	//const
+		case 1: SymbolTableUpdate(name, "scalar variable", "integer", "\0"); break;	//int
+		case 2: SymbolTableUpdate(name, "scalar variable", "float", "\0"); break; 	//float
+		case 3: SymbolTableUpdate(name, "scalar variable", "void", "\0"); break;	//void
+		case 4: SymbolTableUpdate(name, "scalar variable", "const", "\0"); break;	//const
 
-		case 5: SymbolTableUpdate($2, "function", $2, $1) break;		//function name
-		case 6: SymbolTableUpdate($$, "array variable", "integer", "\0") break;		//integer array variable
-		case 7: SymbolTableUpdate($$, "array variable", "float", "\0") break;		//float array variable
+		case 5: SymbolTableUpdate(name, "function", name, name2); break;		//function name
+		case 6: SymbolTableUpdate(name, "array variable", "integer", "\0"); break;		//integer array variable
+		case 7: SymbolTableUpdate(name, "array variable", "float", "\0"); break;		//float array variable
 	}
 }
-
