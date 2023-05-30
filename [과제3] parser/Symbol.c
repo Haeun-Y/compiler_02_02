@@ -150,8 +150,6 @@ void updateHT(HTpointer cur, char* identType, char* dataType, char* returnType)
 	
 	for(int i = 0; i<strlen(returnType); i++)
 		cur->returnType[i] = returnType[i];
-	
-	cur->lineNumber = lineNumber;
 }
 
 /*
@@ -192,7 +190,7 @@ void SymbolTable()
 	ComputeHS(nextid, nextfree);
 	LookupHS(nextid, hashcode);
 	if (!found) {
-		printf("%6d          TIDENT     %7d\t", lineNumber, nextid);
+		printf("%6d          TIDENT     %7d\t", cLine, nextid);
 		for (int i = nextid; i< nextfree-1; i++)
 			printf("%c", ST[i]);
 		printf("\t(entered)\n");
@@ -201,7 +199,7 @@ void SymbolTable()
 		nextid = nextfree;
 	}
 	else {
-		printf("%6d          TIDENT     %7d\t", lineNumber, sameid);
+		printf("%6d          TIDENT     %7d\t", cLine, sameid);
 		for (int i = nextid; i < nextfree - 1; i++)
 			printf("%c", ST[i]);
 		printf("\t(already existed)\n");
