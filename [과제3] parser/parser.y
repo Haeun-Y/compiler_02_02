@@ -50,12 +50,12 @@ function_def 		: function_header compound_st
 function_header 	: dcl_spec function_name formal_param	{strcpy(returnType,$1); strcpy(identifierName, $2); semantic(3);};
 dcl_spec 		: dcl_specifiers				;
 dcl_specifiers 		: dcl_specifier			{strcpy(name, "scalar variable");};				
-		 	| dcl_specifiers dcl_specifier		{type=$2; strcpy(name, "scalar const");};
+		 	| dcl_specifiers dcl_specifier		{strcpy(name, "scalar const");};
 dcl_specifier 		: type_qualifier
 			| type_specifier				
 type_qualifier 		: TCONST				 ;       
-type_specifier 		: TINT						
-		 	| TVOID						
+type_specifier 		: TINT						{type=$$}
+		 	| TVOID						{type=$$};
 function_name 		: TIDENT					;
 formal_param 		: TLPAREN opt_formal_param TRPAREN
 			| TLPAREN opt_formal_param {yyerrok; PrintError("Not closed small bracket");}
@@ -81,7 +81,7 @@ init_declarator 	: declarator
 		 	| declarator TASSIGN TNUMBER			
 		 	| declarator TEQUAL TNUMBER			{yyerrok; PrintError("Declaring error");};
 declarator 		: TIDENT					{strcpy(identifierName,$$);}
-           		| TIDENT TLBRACKET opt_number TRBRACKET	{strcpy(identifierName,$1);}
+           		| TIDENT TLBRACKET opt_number TRBRACKET	{strcpy(name, "array variable"); strcpy(identifierName,$1);}
            		| TIDENT TLBRACKET opt_number error	{yyerrok; PrintError("Not closed large bracket");};
 opt_number 		: TNUMBER
 	     		|						;
