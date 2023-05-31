@@ -7,6 +7,7 @@
 %{
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 #include <malloc.h>
 #include "glob.h"
 
@@ -16,7 +17,7 @@ extern char* yytext;
 void semantic(int);
 char* identifierName;
 char* returnType;
-char* type;
+char* returnType;
 %}
 
 %token TIDENT TNUMBER TCONST TELSE TIF TEIF TINT TRETURN TVOID TWHILE
@@ -45,15 +46,15 @@ function_def 		: function_header compound_st
 			| function_header TSEMI
 			| function_header error				{yyerrok; PrintError("Missing semicolon");}
 			| error compound_st				{yyerrok; PrintError("No function header");};
-function_header 	: dcl_spec function_name formal_param	{returnType=$1; identifierName =$2; semantic(3);};
+function_header 	: dcl_spec function_name formal_param	{strcpy(returnType,$1); strcpy(identifierName, $2); semantic(3);};
 dcl_spec 		: dcl_specifiers				;
 dcl_specifiers 		: dcl_specifier
 		 	| dcl_specifiers dcl_specifier			;
 dcl_specifier 		: type_qualifier
 			| type_specifier				;
 type_qualifier 		: TCONST				 ;       
-type_specifier 		: TINT						
-		 	| TVOID						
+type_specifier 		: TINT						{strcpy(type,$$)}
+		 	| TVOID						{strcpy(type,$$)};
 function_name 		: TIDENT					;
 formal_param 		: TLPAREN opt_formal_param TRPAREN
 			| TLPAREN opt_formal_param {yyerrok; PrintError("Not closed small bracket");}
@@ -63,14 +64,14 @@ opt_formal_param 	: formal_param_list
 formal_param_list 	: param_dcl					
 		    	| formal_param_list TCOMMA param_dcl 		
 		    	| formal_param_list param_dcl			{yyerrok; PrintError("Missing comma");}
-param_dcl 		: dcl_spec declarator				{identifierName=$2; semantic(1);};
+param_dcl 		: dcl_spec declarator				{strcpy(identifierName,$2); semantic(1);};
 compound_st 		: TLBRACE opt_dcl_list opt_stat_list TRBRACE
 			| TLBRACE opt_dcl_list opt_stat_list error   {yyerrok; PrintError("Not closed medium bracket");};
 opt_dcl_list 		: declaration_list
 			|						;
 declaration_list 	: declaration
 			| declaration_list declaration 			;
-declaration 		: dcl_spec init_dcl_list TSEMI			{type=$1};
+declaration 		: dcl_spec init_dcl_list TSEMI			
 			| dcl_spec init_dcl_list error 			{yyerrok; PrintError("Missing semicolon");};
 init_dcl_list 		: init_declarator				
 			| init_dcl_list TCOMMA init_declarator
@@ -78,8 +79,8 @@ init_dcl_list 		: init_declarator
 init_declarator 	: declarator					
 		 	| declarator TASSIGN TNUMBER			
 		 	| declarator TEQUAL TNUMBER			{yyerrok; PrintError("Declaring error");};
-declarator 		: TIDENT					{identifierName=$$; semantic(1);}
-           		| TIDENT TLBRACKET opt_number TRBRACKET	{identifierName=$1; semantic(5);}
+declarator 		: TIDENT					{strcpy(identifierName,$$); semantic(1);}
+           		| TIDENT TLBRACKET opt_number TRBRACKET	{strcpy(identifierName,$1); semantic(5);}
            		| TIDENT TLBRACKET opt_number error	{yyerrok; PrintError("Not closed large bracket");};
 opt_number 		: TNUMBER
 	     		|						;
@@ -168,6 +169,8 @@ void semantic(int n)
 	switch(n){
 	//정의한 타입들은 symtable에서 처리
 		case 1: SymbolTableUpdate(identifierName, "scalar variable", type, "\0"); break;	//scalar variable, function parameter
+		case 2: SymbolTableUpdate(identifierName, "scalar const", type, "\0"); break;	//scalar const
+
 		case 3: SymbolTableUpdate(identifierName, "function", identifierName, returnType); break;		//function name
 		case 5: SymbolTableUpdate(identifierName, "array variable", "integer", "\0"); break;		//integer array variable
 	}

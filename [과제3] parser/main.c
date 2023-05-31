@@ -5,10 +5,12 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "tn.h"
 #include "glob.h"
 
 extern yylex();
+extern char* yytext;
 extern int yyparse();
 
 void main()
