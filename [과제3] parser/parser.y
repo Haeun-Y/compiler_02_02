@@ -13,6 +13,7 @@
 
 extern yylex();
 extern char* yytext;
+extern SymbolTableUpdate();
 
 void semantic(int);
 char identifierName[100];
@@ -170,8 +171,6 @@ void semantic(int n)
 	switch(n){
 	//정의한 타입들은 symtable에서 처리
 		case 1: SymbolTableUpdate(identifierName, name, type, "\0"); break;	//scalar variable, function parameter
-		case 2: SymbolTableUpdate(identifierName, "scalar const", type, "\0"); break;	//scalar const
 		case 3: SymbolTableUpdate(identifierName, "function", identifierName, returnType); break;		//function name
-		case 5: SymbolTableUpdate(identifierName, "array variable", "integer", "\0"); break;		//integer array variable
 	}
 }
