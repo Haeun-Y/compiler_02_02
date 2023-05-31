@@ -15,9 +15,9 @@ extern yylex();
 extern char* yytext;
 
 void semantic(int);
-char* identifierName;
-char* returnType;
-char* returnType;
+char identifierName[100];
+char returnType[100];
+char type[100];
 %}
 
 %token TIDENT TNUMBER TCONST TELSE TIF TEIF TINT TRETURN TVOID TWHILE
