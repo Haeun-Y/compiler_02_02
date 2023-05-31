@@ -11,7 +11,6 @@
 #include "glob.h"
 
 extern yylex();
-extern yyerror();
 extern char* yytext;
 
 void semantic(int);
