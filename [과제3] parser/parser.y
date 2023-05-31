@@ -16,6 +16,7 @@ extern char* yytext;
 void semantic(int);
 char* identifierName;
 char* returnType;
+char* type;
 %}
 
 %token TIDENT TNUMBER TCONST TELSE TIF TEIF TINT TRETURN TVOID TWHILE
