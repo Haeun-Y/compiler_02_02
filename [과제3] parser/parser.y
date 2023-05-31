@@ -18,6 +18,7 @@ void semantic(int);
 char identifierName[100];
 char returnType[100];
 char type[100];
+char name[10];
 %}
 
 %token TIDENT TNUMBER TCONST TELSE TIF TEIF TINT TRETURN TVOID TWHILE
@@ -48,13 +49,13 @@ function_def 		: function_header compound_st
 			| error compound_st				{yyerrok; PrintError("No function header");};
 function_header 	: dcl_spec function_name formal_param	{strcpy(returnType,$1); strcpy(identifierName, $2); semantic(3);};
 dcl_spec 		: dcl_specifiers				;
-dcl_specifiers 		: dcl_specifier
-		 	| dcl_specifiers dcl_specifier			;
+dcl_specifiers 		: dcl_specifier			{strcpy(name, "scalar variable");};				
+		 	| dcl_specifiers dcl_specifier		{type=$2; strcpy(name, "scalar const");};
 dcl_specifier 		: type_qualifier
-			| type_specifier				;
+			| type_specifier				
 type_qualifier 		: TCONST				 ;       
-type_specifier 		: TINT						{strcpy(type,$$)}
-		 	| TVOID						{strcpy(type,$$)};
+type_specifier 		: TINT						
+		 	| TVOID						
 function_name 		: TIDENT					;
 formal_param 		: TLPAREN opt_formal_param TRPAREN
 			| TLPAREN opt_formal_param {yyerrok; PrintError("Not closed small bracket");}
@@ -71,7 +72,7 @@ opt_dcl_list 		: declaration_list
 			|						;
 declaration_list 	: declaration
 			| declaration_list declaration 			;
-declaration 		: dcl_spec init_dcl_list TSEMI			
+declaration 		: dcl_spec init_dcl_list TSEMI			{semantic(1);}
 			| dcl_spec init_dcl_list error 			{yyerrok; PrintError("Missing semicolon");};
 init_dcl_list 		: init_declarator				
 			| init_dcl_list TCOMMA init_declarator
@@ -79,8 +80,8 @@ init_dcl_list 		: init_declarator
 init_declarator 	: declarator					
 		 	| declarator TASSIGN TNUMBER			
 		 	| declarator TEQUAL TNUMBER			{yyerrok; PrintError("Declaring error");};
-declarator 		: TIDENT					{strcpy(identifierName,$$); semantic(1);}
-           		| TIDENT TLBRACKET opt_number TRBRACKET	{strcpy(identifierName,$1); semantic(5);}
+declarator 		: TIDENT					{strcpy(identifierName,$$);}
+           		| TIDENT TLBRACKET opt_number TRBRACKET	{strcpy(identifierName,$1);}
            		| TIDENT TLBRACKET opt_number error	{yyerrok; PrintError("Not closed large bracket");};
 opt_number 		: TNUMBER
 	     		|						;
@@ -168,9 +169,8 @@ void semantic(int n)
 {
 	switch(n){
 	//정의한 타입들은 symtable에서 처리
-		case 1: SymbolTableUpdate(identifierName, "scalar variable", type, "\0"); break;	//scalar variable, function parameter
+		case 1: SymbolTableUpdate(identifierName, name, type, "\0"); break;	//scalar variable, function parameter
 		case 2: SymbolTableUpdate(identifierName, "scalar const", type, "\0"); break;	//scalar const
-
 		case 3: SymbolTableUpdate(identifierName, "function", identifierName, returnType); break;		//function name
 		case 5: SymbolTableUpdate(identifierName, "array variable", "integer", "\0"); break;		//integer array variable
 	}
