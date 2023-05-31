@@ -77,9 +77,9 @@ init_dcl_list 		: init_declarator
 init_declarator 	: declarator					
 		 	| declarator TASSIGN TNUMBER			
 		 	| declarator TEQUAL TNUMBER			{yyerrok; PrintError("Declaring error");};
-declarator 		: TIDENT					{identifierName=$$; semantic(1);};
-           		| TIDENT TLBRACKET opt_number TRBRACKET	{identifierName=$1; semantic(5);}:
-           		| TIDENT TLBRACKET opt_number error	{yyerrok; PrintError("Not closed large bracket");}
+declarator 		: TIDENT					{identifierName=$$; semantic(1);}
+           		| TIDENT TLBRACKET opt_number TRBRACKET	{identifierName=$1; semantic(5);}
+           		| TIDENT TLBRACKET opt_number error	{yyerrok; PrintError("Not closed large bracket");};
 opt_number 		: TNUMBER
 	     		|						;
 opt_stat_list 		: statement_list
