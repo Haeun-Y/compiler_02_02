@@ -83,6 +83,7 @@ function_name 	    : TIDENT
 								}
 							}
 						}
+					| TERROR
 					;
                     					
 formal_param 		: TLPAREN opt_formal_param TRPAREN {type_param = 0;}
@@ -123,7 +124,7 @@ init_dcl_list 		: init_declarator
 					;
 init_declarator 	: declarator					
 		 			| declarator TASSIGN TNUMBER 
-					| declarator TASSIGN TERROR {yyerrok; printError(err);}
+					| declarator TASSIGN TERROR
 					;
 
 declarator 			: TIDENT 
@@ -148,7 +149,6 @@ declarator 			: TIDENT
 							}
 						}
 					}
-					| TERROR {yyerrok; printError(err);}
 	     			| TIDENT TLBRACKET opt_number TRBRACKET		
 					{ 
 						if (!found){
@@ -172,6 +172,7 @@ declarator 			: TIDENT
 						}
 					}
 					| TIDENT TLBRACKET opt_number error {yyerrok; printError(nobrack);}
+					| TERROR
 					;
 
 opt_number 			: TNUMBER				
