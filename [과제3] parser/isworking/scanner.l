@@ -70,7 +70,7 @@ digit	[0-9]
     							if(yyleng > 12)
     							{
     								err = illid_long;
-    								printError(err);
+                                    printError(err);
     								return(TERROR);
     							}
     							else
