@@ -107,7 +107,7 @@ compound_st 		: TLBRACE opt_dcl_list opt_stat_list TRBRACE
 					;
 
 opt_dcl_list 		: declaration_list		
-					|		
+					|
 					;	
 
 declaration_list 	: declaration		
@@ -194,6 +194,7 @@ statement 			: compound_st
 	   				| while_st				
 	   				| return_st	
 					| TCOMMENT
+					| declaration
 	   				;
 
 expression_st 		: opt_expression TSEMI
