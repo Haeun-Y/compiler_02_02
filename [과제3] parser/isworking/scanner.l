@@ -16,13 +16,13 @@ letter	[a-zA-Z_]
 digit	[0-9]
 
 %%
-"const"                          return(TCONST);
-"else"                            return(TELSE);
-"if"                               return(TIF);
-"int"                              return(TINT);
-"return"                         return(TRETURN);
-"void"                           return(TVOID);
-"while"                          return(TWHILE);
+[Cc][Oo][Nn][Ss][Tt]		return(TCONST);
+[Ii][Nn][Tt]		        return(TINT);
+[Rr][Ee][Tt][Uu][Rr][Nn]    return(TRETURN);
+[Vv][Oo][Ii][Dd]            return(TVOID);
+[Ww][Hh][Ii][Ll][Ee]        return(TWHILE);
+[Ii][Ff]                    return(TIF);
+[Ee][Ll][Ss][Ee]		    return(TELSE);
 ","                                return(TCOMMA); 
 ";"                                return(TSEMI);
 "("                               return(TLPAREN);
