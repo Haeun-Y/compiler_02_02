@@ -96,7 +96,7 @@ opt_formal_param 	: formal_param_list
 
 formal_param_list 	: param_dcl 			
 		    		| formal_param_list TCOMMA param_dcl
-					| formal_param_list  param_dcl error {yyerrok; printError(nocomma);}
+					| formal_param_list param_dcl {yyerrok; printError(nocomma);}
 					;
 
 param_dcl 			: dcl_spec declarator {type_param = 1;}
@@ -120,7 +120,9 @@ declaration 		: dcl_spec init_dcl_list TSEMI
 
 init_dcl_list 		: init_declarator 		
 					| init_dcl_list TCOMMA init_declarator
-					| init_dcl_list init_declarator error {yyerrok; printError(nocomma);}
+					| init_dcl_list init_declarator {yyerrok; printError(nocomma);}
+					| TERROR
+					| init_dcl_list TERROR
 					;
 init_declarator 	: declarator					
 		 			| declarator TASSIGN TNUMBER 
@@ -172,7 +174,6 @@ declarator 			: TIDENT
 						}
 					}
 					| TIDENT TLBRACKET opt_number error {yyerrok; printError(nobrack);}
-					| TERROR
 					;
 
 opt_number 			: TNUMBER				
