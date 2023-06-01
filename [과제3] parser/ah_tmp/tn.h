@@ -1,0 +1,50 @@
+#ifndef YYSTYPE
+#define YYSTYPE int
+#endif
+#define	TIDENT	258
+#define	TNUMBER	259
+#define	TRNUMBER	260
+#define	TCONST	261
+#define	TELSE	262
+#define	TIF	263
+#define	TINT	264
+#define	TFLOAT	265
+#define	TRETURN	266
+#define	TVOID	267
+#define	TWHILE	268
+#define	TASSIGN	269
+#define	TADDASSIGN	270
+#define	TSUBASSIGN	271
+#define	TMULASSIGN	272
+#define	TDIVASSIGN	273
+#define	TMODASSIGN	274
+#define	TOR	275
+#define	TAND	276
+#define	TEQUAL	277
+#define	TNOTEQU	278
+#define	TGREATE	279
+#define	TLESSE	280
+#define	TLESS	281
+#define	TGREAT	282
+#define	TINC	283
+#define	TDEC	284
+#define	TSEMI	285
+#define	TPLUS	286
+#define	TMINUS	287
+#define	TSTAR	288
+#define	TSLASH	289
+#define	TMOD	290
+#define	TNOT	291
+#define	TLPAREN	292
+#define	TRPAREN	293
+#define	TLBRACKET	294
+#define	TRBRACKET	295
+#define	TLBRACE	296
+#define	TRBRACE	297
+#define	TCOMMA	298
+#define	TCOMMENT	299
+#define	TERROR	300
+#define	LOWER_THEN_ELSE	301
+
+
+extern YYSTYPE yylval;
