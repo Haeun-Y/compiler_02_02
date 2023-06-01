@@ -95,7 +95,7 @@ opt_formal_param 	: formal_param_list
 
 formal_param_list 	: param_dcl 			
 		    		| formal_param_list TCOMMA param_dcl
-					| formal_param_list  param_dcl {yyerrok; printError(nocomma);}
+					| formal_param_list  param_dcl error {yyerrok; printError(nocomma);}
 					;
 
 param_dcl 			: dcl_spec declarator {type_param = 1;}
@@ -119,10 +119,11 @@ declaration 		: dcl_spec init_dcl_list TSEMI
 
 init_dcl_list 		: init_declarator 		
 					| init_dcl_list TCOMMA init_declarator
-					| init_dcl_list init_declarator {yyerrok; printError(nocomma);}
+					| init_dcl_list init_declarator error {yyerrok; printError(nocomma);}
 					;
 init_declarator 	: declarator					
-		 			| declarator TASSIGN TNUMBER
+		 			| declarator TASSIGN TNUMBER 
+					| declarator TASSIGN TERROR {yyerrok; printError(err);}
 					;
 
 declarator 			: TIDENT 
@@ -147,6 +148,7 @@ declarator 			: TIDENT
 							}
 						}
 					}
+					| TERROR {yyerrok; printError(err);}
 	     			| TIDENT TLBRACKET opt_number TRBRACKET		
 					{ 
 						if (!found){
@@ -218,72 +220,72 @@ expression 			: assignment_exp
 
 assignment_exp 		: logical_or_exp			
 					| unary_exp TASSIGN assignment_exp 	
-					| unary_exp TASSIGN error 	{yyerrok; printError(wrongst);}
+					| unary_exp TASSIGN error 	{yyerrok; printError(noop);}
 					| unary_exp TADDASSIGN assignment_exp 	
-					| unary_exp TADDASSIGN error {yyerrok; printError(wrongst);}
+					| unary_exp TADDASSIGN error {yyerrok; printError(noop);}
 					| unary_exp TSUBASSIGN assignment_exp 	
-					| unary_exp TSUBASSIGN error {yyerrok; printError(wrongst);}
+					| unary_exp TSUBASSIGN error {yyerrok; printError(noop);}
 					| unary_exp TMULASSIGN assignment_exp 
-					| unary_exp TMULASSIGN error {yyerrok; printError(wrongst);}
+					| unary_exp TMULASSIGN error {yyerrok; printError(noop);}
 					| unary_exp TDIVASSIGN assignment_exp 	
-					| unary_exp TDIVASSIGN error {yyerrok; printError(wrongst);}
+					| unary_exp TDIVASSIGN error {yyerrok; printError(noop);}
 					| unary_exp TMODASSIGN assignment_exp 
-					| unary_exp TMODASSIGN error {yyerrok; printError(wrongst);}
+					| unary_exp TMODASSIGN error {yyerrok; printError(noop);}
 					;
 	
 logical_or_exp		: logical_and_exp			
 					| logical_or_exp TOR logical_and_exp 	
-					| logical_or_exp TOR error {yyerrok; printError(wrongst);}
+					| logical_or_exp TOR error {yyerrok; printError(noop);}
 					;
 
 logical_and_exp 	: equality_exp				
 		 			| logical_and_exp TAND equality_exp 	
-					| logical_and_exp TAND error {yyerrok; printError(wrongst);} 
+					| logical_and_exp TAND error {yyerrok; printError(noop);} 
 					;
 
 equality_exp 		: relational_exp			
 					| equality_exp TEQUAL relational_exp 
-					| equality_exp TEQUAL error {yyerrok; printError(wrongst);}
+					| equality_exp TEQUAL error {yyerrok; printError(noop);}
 					| equality_exp TNOTEQU relational_exp 	
-					| equality_exp TNOTEQU error {yyerrok; printError(wrongst);}
+					| equality_exp TNOTEQU error {yyerrok; printError(noop);}
 					;
 
 relational_exp		: additive_exp 			
 					| relational_exp TLESS additive_exp 	
-					| relational_exp TLESS error {yyerrok; printError(wrongst);}
+					| relational_exp TLESS error {yyerrok; printError(noop);}
 					| relational_exp TGREAT additive_exp 
-					| relational_exp TGREAT error {yyerrok; printError(wrongst);}
+					| relational_exp TGREAT error {yyerrok; printError(noop);}
 					| relational_exp TGREATE additive_exp 
-					| relational_exp TGREATE error {yyerrok; printError(wrongst);}
+					| relational_exp TGREATE error {yyerrok; printError(noop);}
 					| relational_exp TLESSE additive_exp 	
-					| relational_exp TLESSE error {yyerrok; printError(wrongst);}
+					| relational_exp TLESSE error {yyerrok; printError(noop);}
 					;
 
 additive_exp 		: multiplicative_exp			
 					| additive_exp TPLUS multiplicative_exp 
-					| additive_exp TPLUS error {yyerrok; printError(wrongst);}
+					| additive_exp TPLUS error {yyerrok; printError(noop);}
 					| additive_exp TMINUS multiplicative_exp 	
-					| additive_exp TMINUS error {yyerrok; printError(wrongst);}
+					| additive_exp TMINUS error {yyerrok; printError(noop);}
 					; 
 
 multiplicative_exp 	: unary_exp				
 		    		| multiplicative_exp TSTAR unary_exp 
-					| multiplicative_exp TSTAR error {yyerrok; printError(wrongst);}
+					| multiplicative_exp TSTAR error {yyerrok; printError(noop);}
 		    		| multiplicative_exp TSLASH unary_exp 
-					| multiplicative_exp TSLASH error {yyerrok; printError(wrongst);}
+					| multiplicative_exp TSLASH error {yyerrok; printError(noop);}
 		    		| multiplicative_exp TMOD unary_exp 
-					| multiplicative_exp TMOD error {yyerrok; printError(wrongst);}
+					| multiplicative_exp TMOD error {yyerrok; printError(noop);}
 					;
 
 unary_exp 			: postfix_exp				
 	   				| TMINUS unary_exp	
-					| TMINUS error {yyerrok; printError(wrongst);}
+					| TMINUS error {yyerrok; printError(noop);}
 	   				| TNOT unary_exp
-					| TNOT error {yyerrok; printError(wrongst);}
+					| TNOT error {yyerrok; printError(noop);}
 	   				| TINC unary_exp	
-					| TINC error {yyerrok; printError(wrongst);}
+					| TINC error {yyerrok; printError(noop);}
 	   				| TDEC unary_exp	
-					| TDEC error {yyerrok; printError(wrongst);}
+					| TDEC error {yyerrok; printError(noop);}
 					;
 
 postfix_exp 		: primary_exp				
@@ -313,7 +315,7 @@ primary_exp 		: TIDENT
                                 HT[hashcode]->type = idttype;
 							}
 						}
-	     			| TNUMBER			
+	     			| TNUMBER	
 	     			| TLPAREN expression TRPAREN
 					| TLPAREN expression error {yyerrok; printError(noparen);}
 					;		
