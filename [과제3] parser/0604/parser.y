@@ -28,6 +28,8 @@ int type_const = 0;
 %token TERROR TCOMMENT
 %nonassoc LOWER_THEN_ELSE
 %nonassoc TELSE 
+%nonassoc LOW
+%nonassoc HIGH
 
 %%
 mini_c 				: translation_unit	
@@ -39,12 +41,12 @@ translation_unit 	: external_dcl
 
 external_dcl 		: function_def				
 		  			| declaration
-                    | TCOMMENT		//선언문, 함수, 주석 - 으로 구분한다.
+                    | TCOMMENT		//함수 밖 주석을 인식한다.
 					;
 
 function_def 		: function_header compound_st	
                     | function_header TSEMI
-                    | function_header error {yyerrok; printError(wrongfdef);} //compound_st에 에러가 있거나 semicoloin이 없는 경우 모두 wrongfdef로 처리한다.
+                    | function_header error {yyerrok; printError(wrongst);} //compound_st에 에러가 있거나 semicoloin이 없는 경우 모두 wrongst로 처리한다.
 					;
 
 function_header 	: dcl_spec function_name {type_param = 1;} formal_param //formal_param으로 넘어오기 전에 type_param 임을 명시한다.
@@ -69,7 +71,7 @@ type_specifier 		: TINT {type_int = 1; type_void = 0;} //type_void는 0으로 �
 					;		
 
 function_name 	    : TIDENT
-						{    //identifie가 중복으로 적혀있을 때 type이 바뀌는 것을 방지하기 위해 최초로 입력 될 때만 type을 저장한다.
+						{   //identifie가 중복으로 적혀있을 때 type이 바뀌는 것을 방지하기 위해 최초로 입력 될 때만 type을 저장한다.
 							if (!found){ 
 								if(type_void == 1){
 									idttype = 3; //fuction name, return type = void
@@ -98,8 +100,9 @@ formal_param_list 	: param_dcl
 					| formal_param_list param_dcl error {yyerrok; printError(nocomma);}
 					;
 
-param_dcl 			: dcl_spec declarator {type_param = 1;}
-					| declarator error {yyerrok; printError(wrongdec);}
+param_dcl 			: TVOID {type_void = 0;} //void 파라미터의 경우 declarator가 오지 않는다. ex) void (0), void hello (x)
+					| TINT declarator {type_param = 1;} 
+					| declarator error {yyerrok; printError(wrongparam);} //declarator만 있는 경우 에러 처리한다.
 					;	
 					
 compound_st 		: TLBRACE opt_dcl_list opt_stat_list TRBRACE
@@ -114,14 +117,8 @@ declaration_list 	: declaration
 					| declaration_list declaration 
  					;
 
-declaration 		: dcl_spec init_dcl_list TSEMI{
-					type_int = 0;
-					type_void = 0; }
-					| dcl_spec init_dcl_list error {
-					yyerrok; 
-					cLines --;
-					type_int = 0; type_void = 0; 
-					printError(nosemi);cLines ++;}
+declaration 		: dcl_spec init_dcl_list TSEMI
+					| dcl_spec init_dcl_list error {yyerrok; printError(nosemi);}
 					;
 
 init_dcl_list 		: init_declarator 		
@@ -130,22 +127,18 @@ init_dcl_list 		: init_declarator
 					;
 init_declarator 	: declarator					
 		 			| declarator TASSIGN TNUMBER
-					| declarator TASSIGN TERROR
+					| declarator TASSIGN TERROR //'int a = 0.2'와 같이 실수가 적힌 경우 scanner에서 TERROR 토큰을 반환받는다.
 					;
 
 declarator 			: TIDENT
 					{
+						//identifie가 중복으로 적혀있을 때 type이 바뀌는 것을 방지하기 위해 최초로 입력 될 때만 type을 저장한다.
 						if (!found){
 							if(type_param == 1){
 								if(type_int == 1){
 									idttype = 5; //integer scalar fuction parameter
 									HT[hashcode]->type = idttype;
 									type_int = 0;
-								}
-								if(type_void == 1){
-									idttype = 7; //void fuction parameter
-									HT[hashcode]->type = idttype;
-									type_void = 0;
 								}
 								type_param = 0;
 							 }
@@ -165,6 +158,7 @@ declarator 			: TIDENT
 					}
 	     			| TIDENT TLBRACKET opt_number TRBRACKET		
 					{ 
+						//identifie가 중복으로 적혀있을 때 type이 바뀌는 것을 방지하기 위해 최초로 입력 될 때만 type을 저장한다.
 						if (!found){
 							if(type_param == 1 && type_int == 1){
 								idttype = 6; //integer array fuction parameter
@@ -187,7 +181,7 @@ declarator 			: TIDENT
 						}
 					}
 					| TIDENT TLBRACKET opt_number error {yyerrok; printError(nobrack);}
-					| TERROR
+					| TERROR //허용되지 않는 identifier가 적힌 경우 scanner에서 TERROR 토큰을 반환받는다.
 					;
 
 opt_number 			: TNUMBER				
@@ -204,23 +198,24 @@ statement_list 		: statement
 					;
 					
 statement 			: compound_st			
-	   				| expression_st			
+	   				| expression_st		
 	   				| if_st					
 	   				| while_st				
 	   				| return_st	
-					| TCOMMENT
+					| TCOMMENT //함수 내 주석을 인식한다.
 	   				;
 
 expression_st 		: opt_expression TSEMI
-					| expression error {yyerrok; cLines --; printError(nosemi); cLines ++;};		
-opt_expression 		: expression				
+					| expression error {yyerrok; printError(nosemi);};		
+opt_expression 		: expression 
+					| opt_expression TCOMMA expression //'a, b, c;' 와 같은 문장을 인식한다.
 		 			|			
 					;
 				
 if_st 				: TIF TLPAREN expression TRPAREN statement %prec LOWER_THEN_ELSE
 					| TIF TLPAREN expression TRPAREN statement TELSE statement 	
 					| TIF TLPAREN error TRPAREN {yyerrok; printError(nocondition);}
-				    |TIF TLPAREN expression error {yyerrok; printError(noparen);}
+				    | TIF TLPAREN expression error {yyerrok; printError(noparen);}
 					;
 
 while_st 			: TWHILE TLPAREN expression TRPAREN statement 
@@ -305,7 +300,8 @@ unary_exp 			: postfix_exp
 					| TDEC error {yyerrok; printError(noop);}
 					;
 
-postfix_exp 		: primary_exp				
+postfix_exp 		: primary_exp %prec LOW
+					| TIDENT TIDENT {yyerrok; printError(nocomma);} %prec HIGH	//'float a;'와 같이 TIDENT가 연달아 오는 경우 에러 처리한다.			
 	      			| postfix_exp TLBRACKET expression TRBRACKET
                     | postfix_exp TLBRACKET expression error {yyerrok; printError(nobrack);}
 	      			| postfix_exp TLPAREN opt_actual_param TRPAREN
@@ -325,16 +321,17 @@ actual_param_list 	: assignment_exp
 					| actual_param_list TCOMMA assignment_exp
 					;
 
-primary_exp 		: TIDENT	
+primary_exp 		: TIDENT
 						{
+							//identifie가 중복으로 적혀있을 때 type이 바뀌는 것을 방지하기 위해 최초로 입력 될 때만 type을 저장한다.
 							if (!found){
 								idttype = 10;
                                 HT[hashcode]->type = idttype;
 							}
 						}
-	     			| TNUMBER	
-	     			| TLPAREN expression TRPAREN
-					| TLPAREN expression error {yyerrok; printError(noparen);}
-					| TERROR
+	     			| TNUMBER
+	     			| TLPAREN expression TRPAREN 
+					| TLPAREN expression error {yyerrok; printError(noparen);} 
+					| TERROR //'a = 0.2'와 같이 실수가 적힌 경우 scanner에서 TERROR 토큰을 반환받는다. 
 					;		
 %%
