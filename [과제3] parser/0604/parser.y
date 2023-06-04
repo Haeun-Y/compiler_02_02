@@ -114,8 +114,13 @@ declaration_list 	: declaration
 					| declaration_list declaration 
  					;
 
-declaration 		: dcl_spec init_dcl_list TSEMI
-					| dcl_spec init_dcl_list error {yyerrok; printError(nosemi);}
+declaration 		: dcl_spec init_dcl_list TSEMI{
+					type_int = 0;
+					type_void = 0; }
+					| dcl_spec init_dcl_list error {
+					yyerrok; 
+					type_int = 0; type_void = 0; 
+					printError(nosemi);}
 					;
 
 init_dcl_list 		: init_declarator 		
@@ -332,5 +337,4 @@ primary_exp 		: TIDENT
 					| TERROR
 					;		
 %%
-
 
