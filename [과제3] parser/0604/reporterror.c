@@ -1,6 +1,6 @@
 /*
 * reporterror.c
-* programmer - ±«øµ∞Ê, ø¡¡¯¡÷, ¿±«œ¿∫, √÷øπø¯
+* programmer - Í∂åÏòÅÍ≤Ω, Ïò•ÏßÑÏ£º, Ïú§ÌïòÏùÄ, ÏµúÏòàÏõê
 * date - 2023/06/01
 */
 
@@ -22,49 +22,46 @@ void printError(ERRORtypes err)
 	switch (err)
 	{
 		case illch:
-			printf("line %d      SCANNER ERROR! %s illegal character    \n", cLines, yytext);
+			printf("line %3d      SCANNER ERROR! %s illegal character    \n", cLines, yytext);
 			break;
 		case illid_long:
-			printf("line %d      SCANNER ERROR! too long identifier    \n", cLines);
+			printf("line %3d      SCANNER ERROR! too long identifier    \n", cLines);
 			break;
 		case illid_digit:
-			printf("line %d      SCANNER ERROR! %s start with digit    \n", cLines, yytext);
+			printf("line %3d      SCANNER ERROR! %s start with digit    \n", cLines, yytext);
 			break;
 		case real_num:
-			printf("line %d      SCANNER ERROR! real number is not allowed    \n", cLines);
+			printf("line %3d      SCANNER ERROR! real number is not allowed    \n", cLines);
 			break;
 		case overst:
-			printf("line %d      SCANNER ERROR! ST overflow    \n", cLines);
+			printf("line %3d      SCANNER ERROR! ST overflow    \n", cLines);
 			break;
 		case noparen:
-			printf("line %d      PARSER  ERROR! parenthesis is missed  \n", cLines);
+			printf("line %3d      PARSER  ERROR! parenthesis is missed  \n", cLines);
 			break;
 		case nobrack:
-			printf("line %d      PARSER  ERROR! bracket is missed  \n", cLines);
+			printf("line %3d      PARSER  ERROR! bracket is missed  \n", cLines);
 			break;
 		case nobrace:
-			printf("line %d      PARSER  ERROR! brace is missed  \n", cLines);
+			printf("line %3d      PARSER  ERROR! brace is missed  \n", cLines);
 			break;
 		case nocondition:
-			printf("line %d      PARSER  ERROR! condition statement is missed   \n", cLines);
+			printf("line %3d      PARSER  ERROR! condition statement is missed   \n", cLines);
 			break;
 		case nosemi:
-			printf("line %d      PARSER  ERROR! semicolon is missed  \n", cLines);
+			printf("line %3d      PARSER  ERROR! semicolon is missed  \n", cLines - 1);
 			break;
 		case noop:
-			printf("line %d      PARSER  ERROR! operand is missed  \n", cLines);
+			printf("line %3d      PARSER  ERROR! operand is missed  \n", cLines);
 			break;
 		case nocomma:
-			printf("line %d      PARSER  ERROR! comma is missed   \n", cLines);
+			printf("line %3d      PARSER  ERROR! comma is missed   \n", cLines);
 			break;
 		case wrongst:
-			printf("line %d      PARSER  ERROR! statement is wrong   \n", cLines);
+			printf("line %3d      PARSER  ERROR! statement is wrong   \n", cLines);
 			break;
-		case wrongfdef:
-			printf("line %d      PARSER  ERROR! fuction definition is wrong   \n", cLines);
-			break;
-		case wrongdec:
-			printf("line %d      PARSER  ERROR! wrong declaration   \n", cLines);
+		case wrongparam:
+			printf("line %3d      PARSER  ERROR! wrong parameter   \n", cLines);
 			break;
 	}
 
