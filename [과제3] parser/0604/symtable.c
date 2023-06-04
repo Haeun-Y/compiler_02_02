@@ -1,11 +1,11 @@
 /*
 * symtable.c
-* programmer - ±Ç¿µ°æ, ¿ÁÁøÁÖ, À±ÇÏÀº, ÃÖ¿¹¿ø
+* programmer - ê¶Œì˜ê²½, ì˜¥ì§„ì£¼, ìœ¤í•˜ì€, ìµœì˜ˆì›
 * date - 2023/06/01
 */
 
 /*
-identifierÀÇ typeÀº ´ÙÀ½°ú °°ÀÌ Á¤ÀÇÇÑ´Ù.
+identifierì˜ typeì€ ë‹¤ìŒê³¼ ê°™ì´ ì •ì˜í•œë‹¤.
 
 0. error
 1. integer scalar variable
@@ -29,7 +29,7 @@ extern void printError(ERRORtypes err);
 extern char* yytext;
 extern int yyleng;
 
-//hashcode °è»ê
+//hashcode ê³„ì‚°
 void ComputeHS(int nid, int nfree) 
 {
     int code = 0;
@@ -39,7 +39,7 @@ void ComputeHS(int nid, int nfree)
     hashcode = (hashcode == HTsize ? 0 : hashcode);
 }
 
-//hash table¿¡ µ¿ÀÏÇÑ identifier°¡ ÀÌ¹Ì Á¸ÀçÇÏ´ÂÁö Ã£´Â ÇÔ¼ö
+//hash tableì— ë™ì¼í•œ identifierê°€ ì´ë¯¸ ì¡´ì¬í•˜ëŠ”ì§€ ì°¾ëŠ” í•¨ìˆ˜
 void LookupHS(int nid, int hscode)
 {
     HTpointer here;
@@ -68,7 +68,7 @@ void LookupHS(int nid, int hscode)
     }
 }
 
-//hash table¿¡ »õ·Î¿î identifier Ãß°¡
+//hash tableì— ìƒˆë¡œìš´ identifier ì¶”ê°€
 void ADDHT(int hscode)
 {
     HTpointer ptr;
@@ -91,7 +91,7 @@ void ADDHT(int hscode)
     }
 }
 
-//hash table Ãâ·ÂÇÏ´Â ÇÔ¼ö identfier ÀúÀåµÈ line + idetifier + typeÀ» Ãâ·ÂÇÔ
+//hash table ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜ identfier ì €ì¥ëœ line + idetifier + typeì„ ì¶œë ¥í•¨
 void PrintHStable()
 {
     printf("********************************************************************\n");
@@ -142,13 +142,13 @@ void symtable() {
     ComputeHS(nextid, nextfree);
     LookupHS(nextid, hashcode);
 
-    //±âÁ¸ hashtable¿¡ µ¿ÀÏÇÑ identifier ¾øÀ» ½Ã add hashtable
+    //ê¸°ì¡´ hashtableì— ë™ì¼í•œ identifier ì—†ì„ ì‹œ add hashtable
     if (!found) {
             ADDHT(hashcode);
             sameid = nextid;
     }
 
-    //±âÁ¸ hashtable¿¡ µ¿ÀÏÇÑ identifier ÀÖ´Â °æ¿ì
+    //ê¸°ì¡´ hashtableì— ë™ì¼í•œ identifier ìˆëŠ” ê²½ìš°
     else {
         nextfree = nextid;
     }
