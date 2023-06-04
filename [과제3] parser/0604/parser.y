@@ -119,8 +119,9 @@ declaration 		: dcl_spec init_dcl_list TSEMI{
 					type_void = 0; }
 					| dcl_spec init_dcl_list error {
 					yyerrok; 
+					cLines --;
 					type_int = 0; type_void = 0; 
-					printError(nosemi);}
+					printError(nosemi);cLines ++;}
 					;
 
 init_dcl_list 		: init_declarator 		
@@ -211,7 +212,7 @@ statement 			: compound_st
 	   				;
 
 expression_st 		: opt_expression TSEMI
-					| expression error {yyerrok; printError(nosemi);};		
+					| expression error {yyerrok; cLines --; printError(nosemi); cLines ++;};		
 opt_expression 		: expression				
 		 			|			
 					;
@@ -337,4 +338,3 @@ primary_exp 		: TIDENT
 					| TERROR
 					;		
 %%
-
