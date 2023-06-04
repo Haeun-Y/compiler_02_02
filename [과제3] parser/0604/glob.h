@@ -1,46 +1,36 @@
 /*
 * glob.h
-* programmer - ±Ç¿µ°æ, ¿ÁÁøÁÖ, À±ÇÏÀº, ÃÖ¿¹¿ø
+* programmer - ê¶Œì˜ê²½, ì˜¥ì§„ì£¼, ìœ¤í•˜ì€, ìµœì˜ˆì›
 * date - 2023/06/01
 */
 
-#define STsize 1000  //string table Å©±â
-#define HTsize 100	//hash table Å©±â
-#define IDlen 12 //idntifier ÃÖ´ë ±æÀÌ
-
+#define STsize 1000  //string table í¬ê¸°
+#define HTsize 100	//hash table í¬ê¸°
 #define FALSE 0
 #define TRUE 1
 
 typedef struct HTentry* HTpointer;
 typedef struct HTentry {
-    int lineNumber; //identifier°¡ ÀÔ·ÂµÈ line
-    int type; //identÀÇ Á¾·ù 
-    int index;  //ST¿¡ ÀÖ´Â identifierÀÇ idx
-    HTpointer next;  //´ÙÀ½ identifier °¡¸®Å°´Â Æ÷ÀÎÅÍ
+    int lineNumber; //identifierê°€ ì…ë ¥ëœ line
+    int type; //identifierì˜ ì¢…ë¥˜ 
+    int index;  //STì— ìˆëŠ” identifierì˜ ì¸ë±ìŠ¤
+    HTpointer next;  //ë‹¤ìŒ identifierë¥¼ ê°€ë¦¬í‚¤ëŠ” í¬ì¸í„°
 } HTentry;
-
-//¿À·ù type ¿­°ÅÇüÀ¸·Î Á¤ÀÇ
-enum errorTypes { noerror, illch, illid_long, illid_digit, real_num, overst, wrongst, wrongfdef, nosemi, noparen, nobrack, nobrace, noop, nocomma, nocondition, wrongdec};
-typedef enum errorTypes ERRORtypes;
-ERRORtypes err;
-
-extern void printError(ERRORtypes err);
-extern void symtable();
-extern char* yytext;
-extern int yyleng;
 
 HTpointer HT[HTsize];
 char ST[STsize];
 
-int startLineNumber;
-int cErrors;
-int cLines;
+enum errorTypes { noerror, illch, illid_long, illid_digit, real_num, overst, wrongst, nosemi, noparen, nobrack, nobrace, noop, nocomma, nocondition, wrongparam};
+typedef enum errorTypes ERRORtypes;
+ERRORtypes err;
 
-int nextid;  //the current identifier
-int nextfree;  //the next available index of ST
-int hashcode;  //hash code of identifier
+int cErrors; //ì—ëŸ¬ ê°œìˆ˜
+int startLineNumber; //ì£¼ì„ ì‹œì‘ ë¼ì¸
+int cLines; //í˜„ì¬ ë¼ì¸
+int nextid;  //í˜„ì¬ identifier
+int nextfree;  
+int hashcode;  
 int sameid;  //first index of identifier
 int found;  //for the previous occurrence of an identifier
-
-int idttype; //identifierÀÇ type 0-8
+int idttype; //identifierì˜ type 0~10
 
