@@ -49,7 +49,7 @@ void printError(ERRORtypes err)
 			printf("line %3d      PARSER  ERROR! condition statement is missed   \n", cLines);
 			break;
 		case nosemi:
-			printf("line %3d      PARSER  ERROR! semicolon is missed  \n", cLines - 1);
+			printf("line %3d      PARSER  ERROR! semicolon is missed  \n", cLines);
 			break;
 		case noop:
 			printf("line %3d      PARSER  ERROR! operand is missed  \n", cLines);
