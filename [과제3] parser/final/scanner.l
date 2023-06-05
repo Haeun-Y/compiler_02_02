@@ -1,6 +1,6 @@
 /*
 * scanner.l
-* programmer - ±Ç¿µ°æ, ¿ÁÁøÁÖ, À±ÇÏÀº, ÃÖ¿¹¿ø
+* programmer - ê¶Œì˜ê²½, ì˜¥ì§„ì£¼, ìœ¤í•˜ì€, ìµœì˜ˆì›
 * date - 2023/06/01
 */
 
@@ -67,7 +67,7 @@ digit	[0-9]
                                     return(TCOMMENT);
                                 }
 {letter}({letter}|{digit})*	{
-    							if(yyleng > 12)
+    							if(yyleng > 11)
     							{
     								err = illid_long;
                                     printError(err);
@@ -84,12 +84,12 @@ digit	[0-9]
     							    return(TIDENT);
     							}
 							}
-[1-9][0-9]*|0([0-7]+|(x|X)[0-9A-Fa-f]+)?		return(TNUMBER); //Á¤¼ö »ó¼öÀÇ °æ¿ì, ºÎÈ£¸¦ Æ÷ÇÔÇÏÁö ¾Ê°í ÀÎ½ÄÇÔ. ¿¬»êÀÚ´Â °³º° ÅäÅ« ÀÎ½ÄÀÌ µÇ¹Ç·Î ºÎÈ£´Â °í·ÁÇÏÁö ¾ÊÀ½.
+[1-9][0-9]*|0([0-7]+|(x|X)[0-9A-Fa-f]+)?		return(TNUMBER); //ì •ìˆ˜ ìƒìˆ˜ì˜ ê²½ìš°, ë¶€í˜¸ë¥¼ í¬í•¨í•˜ì§€ ì•Šê³  ì¸ì‹í•¨. ì—°ì‚°ìëŠ” ê°œë³„ í† í° ì¸ì‹ì´ ë˜ë¯€ë¡œ ë¶€í˜¸ëŠ” ê³ ë ¤í•˜ì§€ ì•ŠìŒ.
 {digit}+"."{digit}+(e[+-]?{digit}+)?  {
                                             err = real_num;
                                             printError(err);
                                             return(TERROR);
-                                      } //½Ç¼ö µé¾î¿Ã ½Ã ¿¡·¯·Î °£ÁÖÇÔ. Floating Point °æ¿ì´Â Á¦¿ÜÇÏ¿´À½.
+                                      } //ì‹¤ìˆ˜ ë“¤ì–´ì˜¬ ì‹œ ì—ëŸ¬ë¡œ ê°„ì£¼í•¨. Floating Point ê²½ìš°ëŠ” ì œì™¸í•˜ì˜€ìŒ.
 {digit}+[A-Za-z0-9_]+             { err = illid_digit; printError(err); return(TERROR);}
 "\n"     cLines++;
 [ \t]   ;
