@@ -101,7 +101,7 @@ formal_param_list 	: param_dcl
 					;
 
 param_dcl 			: TVOID {type_void = 0;} //void 파라미터의 경우 declarator가 오지 않는다. ex) void (0), void hello (x)
-					| TINT declarator {type_param = 1;} 
+					| TINT declarator {type_param = 1; idttype = 5; HT[hashcode]->type=idttype;} 
 					| declarator error {yyerrok; printError(wrongparam);} //declarator만 있는 경우 에러 처리한다.
 					;	
 					
